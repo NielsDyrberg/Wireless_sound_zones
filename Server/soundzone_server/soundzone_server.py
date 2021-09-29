@@ -1,4 +1,5 @@
 
+import time
 import socket
 from soundzone_protocol import SoundZoneProtocol
 
@@ -14,8 +15,10 @@ class SoundZoneServer:
         :param msg: Message to send
         :return: None (Maybe eventually a ack)
         """
-        self.szp.connect()
-        self.szp.send(msg)
+        self.szp.connect(self.szp.ip['client1'])
+        for i in range(1, 5):
+            self.szp.send(msg)
+            time.sleep(1)
 
     def send_to(self, msg, address):
         """

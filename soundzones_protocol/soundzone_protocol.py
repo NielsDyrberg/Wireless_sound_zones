@@ -12,31 +12,52 @@ class SoundZoneProtocol:
     HEADER_SIZE = 8  # one byte for header size
     ENCODING = "utf-8"
 
-    ip = None
-    ip.master = "192.168.1.35"
-    ip.client1 = "192.168.1.36"
+    ip = {
+        "master": '192.168.1.35',
+        "client1": '192.168.1.36'
+    }
 
     cid = {
         "checkCon": 1,
         "enroll": 2,  # not defined yet
     }
 
-    def open_port(self, port=PORT):
+    def open_port(self, addr, port=PORT):
         """
         Opens port to allow incoming connections
+        :param addr: Address to listen for traffic
         :param port: TCP port is used
         :return: None
         """
-        self.s.bind((socket.gethostname(), port))
-        self.s.listen(5)
+        for res in socket.getaddrinfo(addr, port, socket.AF_UNSPEC,
+                                      socket.SOCK_STREAM, 0, socket.AI_PASSIVE):
+            af, socktype, proto, canonname, sa = res
+            try:
+                self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            except OSError as msg:
+                self.s = None
+                continue
+            try:
+                self.s.bind(sa)
+                self.s.listen(1)
+            except OSError as msg:
+                self.s.close()
+                self.s = None
+                continue
+            break
+        if self.s is None:
+            print('could not open socket')
+            while 1:
+                pass
 
-    def connect(self, port=PORT):
+    def connect(self, addr, port=PORT):
         """
         Connects a socket to another.
+        :param addr: Address where to connect
         :param port: TCP port is used
         :return: None
         """
-        self.s.connect((socket.gethostname(), port))
+        self.s.connect((addr, port))
 
     def receive(self):
         """
@@ -50,7 +71,10 @@ class SoundZoneProtocol:
         while True:
             tmp_payload = client_socket.recv(self.buffer_len)
             if new_payload:
-                payload_len = int(tmp_payload[:self.HEADER_SIZE])
+                try:
+                    payload_len = int(tmp_payload[:self.HEADER_SIZE])
+                except ValueError:
+                    continue
                 new_payload = False
                 print(f"Receiving new payload with len: {payload_len}")
 
@@ -87,6 +111,8 @@ class SoundZoneProtocol:
         """
         pass
 
+    def close(self):
+        self.s.close()
 
 if __name__ == "__main__":
     pass

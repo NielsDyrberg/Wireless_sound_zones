@@ -13,7 +13,7 @@ class SoundZoneClient:
         Configures the client to accept incoming connections, and the recieved the msg.
         :return: None (Maybe msg eventually)
         """
-        self.szp.open_port()
+        self.szp.open_port(None)
         self.szp.receive()
 
 
