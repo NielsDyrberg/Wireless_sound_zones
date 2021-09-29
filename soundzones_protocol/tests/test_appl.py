@@ -6,8 +6,8 @@ Setup pytest here, to test the module
 import threading
 import time
 
-from modules.soundzone_client import SoundZoneClient
-from modules.soundzone_server import SoundZoneServer
+from soundzone_client import SoundZoneClient
+from soundzone_server import SoundZoneServer
 
 
 class TestSZP:

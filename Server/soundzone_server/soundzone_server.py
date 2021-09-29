@@ -1,6 +1,6 @@
 
 import socket
-from modules.soundzone_protocol import SoundZoneProtocol
+from soundzone_protocol import SoundZoneProtocol
 
 
 class SoundZoneServer:

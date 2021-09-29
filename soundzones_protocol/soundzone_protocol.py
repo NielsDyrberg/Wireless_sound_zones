@@ -12,6 +12,10 @@ class SoundZoneProtocol:
     HEADER_SIZE = 8  # one byte for header size
     ENCODING = "utf-8"
 
+    ip = None
+    ip.master = "192.168.1.35"
+    ip.client1 = "192.168.1.36"
+
     cid = {
         "checkCon": 1,
         "enroll": 2,  # not defined yet
