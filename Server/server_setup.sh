@@ -8,7 +8,7 @@ sudo apt update
 sudo apt -y upgrade
 
 # Add new packages to install in the list below
-sudo apt -y install git hostapd 
+sudo apt -y install git hostapd python3-pip virtualenviroments
 
 echo "Finished installing packages"
 
