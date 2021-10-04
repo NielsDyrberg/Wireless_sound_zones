@@ -24,6 +24,9 @@ echo "Finished setting up hostname"
 ############################################################################
 # Connect to WiFi
 
+sudo sed -i "3i country=DK" /etc/wpa_supplicant/wpa_supplicant.conf # Set country code
+
+
 PS3='How do you wish to configure the WiFi '
 wifi_setup=("Connect to soundzone network" "Input Wifi SSID/password" "Do not configures")
 select fav in "${wifi_setup[@]}"; do
@@ -46,6 +49,8 @@ select fav in "${wifi_setup[@]}"; do
             *) echo "invalid option $REPLY";;
     esac
 done
+
+
 
 echo "Done setting up soundzone slave :)"
 
