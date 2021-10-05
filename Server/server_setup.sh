@@ -38,14 +38,15 @@ sudo systemctl enable systemd-networkd
 sudo sed -i "1i denyinterfaces wlan0 eth0" /etc/dhcpcd.conf # append to line 1 of file
 sudo printf "interface br0" | sudo tee -a /etc/dhcpcd.conf # end of file
 
-# Makes sure WiFi is not blocked
-sudo rfkill unblock wlan
+
 
 # Configure AP
 
 
 sudo mv ./Setup_files/hostapd.conf /etc/hostapd/
 
+# Makes sure WiFi is not blocked
+sudo rfkill unblock wlan
 
 echo "Finished setting up Access Point"
 
