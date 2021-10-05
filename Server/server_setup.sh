@@ -42,6 +42,7 @@ sudo printf "interface br0" | sudo tee -a /etc/dhcpcd.conf # end of file
 sudo rfkill unblock wlan
 
 # Configure AP
+sudo mkdir /etc/hostapd/
 sudo mv ./Setup_files/hostapd.conf /etc/hostapd/
 
 
