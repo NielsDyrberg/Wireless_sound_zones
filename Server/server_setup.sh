@@ -4,11 +4,11 @@
 
 ############################################################################
 # Install and update standard packages
-sudo apt update
-sudo apt -y upgrade
+sudo apt-get update
+sudo apt-get -y upgrade
 
 # Add new packages to install in the list below
-sudo apt -y install git hostapd python3-pip virtualenviroments
+sudo apt-get -y install hostapd python3-pip 
 
 echo "Finished installing packages"
 
@@ -42,7 +42,8 @@ sudo printf "interface br0" | sudo tee -a /etc/dhcpcd.conf # end of file
 sudo rfkill unblock wlan
 
 # Configure AP
-sudo mkdir /etc/hostapd/
+
+
 sudo mv ./Setup_files/hostapd.conf /etc/hostapd/
 
 

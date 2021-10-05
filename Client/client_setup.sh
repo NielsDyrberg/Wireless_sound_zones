@@ -24,7 +24,7 @@ echo "Finished setting up hostname"
 ############################################################################
 # Connect to WiFi
 
-sudo sed -i "3i country=DK" /etc/wpa_supplicant/wpa_supplicant.conf # Set country code
+
 
 
 PS3='How do you wish to configure the WiFi '
@@ -50,7 +50,9 @@ select fav in "${wifi_setup[@]}"; do
     esac
 done
 
+sudo sed -i "3i country=DK" /etc/wpa_supplicant/wpa_supplicant.conf # Set country code
 
+sudo rfkill unblock wifi # Enables the wifi, should not have to be used for this to work, but it does not work without.
 
 echo "Done setting up soundzone slave :)"
 
