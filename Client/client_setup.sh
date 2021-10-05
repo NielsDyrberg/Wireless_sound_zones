@@ -4,11 +4,12 @@
 
 ############################################################################
 # Install and update standard packages
-sudo apt update
-sudo apt -y upgrade
+sudo apt-get update
+sudo apt-get -y upgrade
+
 
 # Add new packages to install in the list below
-sudo apt -y install git python3-pip virtualenviroments
+sudo apt -y install python3-pip 
 
 echo "Finished installing packages"
 
