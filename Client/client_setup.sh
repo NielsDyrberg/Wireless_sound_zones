@@ -16,7 +16,7 @@ echo "Finished installing packages"
 # Setup new hostname
 read -p "Enter new hostname for slave (soundzone-slavex)" x
 
-sudo printf "\n127.0.1.1      ${x}" >> /etc/hosts
+sudo printf "\n127.0.1.1      ${x}" | sudo tee -a /etc/hosts
 sudo hostnamectl set-hostname "${x}"
 
 echo "Finished setting up hostname"
@@ -33,13 +33,13 @@ select fav in "${wifi_setup[@]}"; do
     case $fav in
         "Connect to soundzone network")
             echo "Inserting sounzone network setup"
-            sudo printf "\n network={ \n         ssid="SoundZone"\n         psk="SuperSejtPassword"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
+            sudo printf "\n network={ \n         ssid="SoundZone"\n         psk="SuperSejtPassword"\n}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf
             break
             ;; 
         "Input Wifi SSID/password")
             read -p "Input Wifi SSID" SSID
             read -p "Input Wifi password" psk
-            sudo printf "\n network={ \n         ssid="$SSID"\n         psk="$psk"\n}" >> /etc/wpa_supplicant/wpa_supplicant.conf
+            sudo printf "\n network={ \n         ssid="$SSID"\n         psk="$psk"\n}" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf
             break
             ;;
         "Do not configures")
