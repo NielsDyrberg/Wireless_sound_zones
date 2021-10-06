@@ -58,8 +58,8 @@ This command is used to send sound data to the client.
 |---|---|---|---|
 | msg_len | 2 | - | Length of message |
 | cid | 1 | 0x01 | Command Id |
-| time | 5 | - | Time to play the block of sound |
-| payload | 1 | - | Payload |
+| time | 8 | - | Time to play the block of sound |
+| payload | - | - | Payload |
 
 <!--
 ```
@@ -77,9 +77,9 @@ server -> client: [ msg_len, cid, time, payload ]
 |---|---|---|---|
 | 1 | [ 0-60 ] | Minute | mm |
 | 2 | [ 0-60 ] | Second | ss |
-| 3 | [ 0-1000 ] | Mili second | ms |
-| 4 | [ 0-1000 ] | Micro second | µs |
-| 5 | [ 0-1000 ] | Nano second | ns |
+| 3-4 | [ 0-1000 ] | Mili second | ms |
+| 5-6 | [ 0-1000 ] | Micro second | µs |
+| 7-8 | [ 0-1000 ] | Nano second | ns |
 
 ---
 
