@@ -15,16 +15,14 @@ Small little harry potters are inside each raspberry pi, and they swish their wa
 To install either the server or client, simply clone the repository to the raspberry pi, and run either server_setup.sh or client_setup.sh
 It´s important to run the setup files login as root, or else you need to manually unblock the wifi
 
+To install as client run:
 
-
-    [Client install]
     sudo su
     git clone https://github.com/NielsDyrberg/Wireless_sound_zones.git
 	./Wireless_sound_zones/Client/client_setup.sh
 	
+To install as server run:
 
-
-    [Server install]
     sudo su
     git clone https://github.com/NielsDyrberg/Wireless_sound_zones.git
 	./Wireless_sound_zones/Server/server_setup.sh
