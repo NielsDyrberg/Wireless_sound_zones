@@ -28,3 +28,4 @@ It´s important to run the setup files login as root, or else you need to manual
 	./Wireless_sound_zones/Server/server_setup.sh
 	
 If you do not wish to run the install as root, simply run `sudo rfkill unblock 0` after install. For some reason it cannot run this inside a shell script
+
