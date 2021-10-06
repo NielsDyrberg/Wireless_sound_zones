@@ -53,8 +53,8 @@ done
 
 sudo sed -i "3i country=DK" /etc/wpa_supplicant/wpa_supplicant.conf # Set country code
 
-sudo rfkill unblock wifi # Enables the wifi, should not have to be used for this to work, but it does not work without.
-sudo rfkill unblock wlan # Enables the wifi, should not have to be used for this to work, but it does not work without.
+sudo rfkill unblock 0 # Enables the wifi, should not have to be used for this to work, but it does not work without.
+
 
 
 echo "Done setting up soundzone slave :)"

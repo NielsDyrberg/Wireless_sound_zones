@@ -46,8 +46,8 @@ sudo printf "interface br0" | sudo tee -a /etc/dhcpcd.conf # end of file
 sudo mv ./Setup_files/hostapd.conf /etc/hostapd/
 
 # Makes sure WiFi is not blocked
-sudo rfkill unblock wlan
-sudo rfkill unblock wifi
+sudo rfkill unblock 0
+
 
 echo "Finished setting up Access Point"
 
