@@ -57,6 +57,7 @@ sudo rfkill unblock 0 # Enables the wifi, should not have to be used for this to
 
 
 
+
 echo "Done setting up soundzone slave :)"
 
 ############################################################################
