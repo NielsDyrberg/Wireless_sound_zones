@@ -16,8 +16,8 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 | IPv | IPv4 |
 | Transport protocol | UDP |
 | Port | 1695 ( Seemingly not used ) |
-| Text encoding | utf-8 |
 | Size of msg_len | 2 bytes |
+| Endianess | Big-endian |
 
 ## Main Structure
 
@@ -41,18 +41,17 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 
 |CID | Name | Description |
 |---|---|---|
-| 0x01 | send | Send a payload to a client |
+| 0x01 | [send](#01---send) | Send a payload to a client |
 |||
-| 0xA1 | enroll_c | Used by client to enroll |
-| 0xA2 | enroll_s | Used by client to enroll |
-| 0xB3 | set_sound_compression | Sets the compression for the music |
-| 0xB4 | set_sample_rate | Sets the sample rate of the music |
+| 0xA1 | [enroll](#a1---enroll) | Used by client to enroll |
+| 0xB3 | [set_sound_format](#b3---setsoundformat) | Sets the format of the music |
 |||
-| 0xF1 | checkCon | Used to check connection, used for debug |
+| 0xF1 | [checkCon](#f1---checkcon) | Used to check connection, used for debug |
 
 ---
+---
 
-### 01 - send
+## 01 - send
 This command is used to send sound data to the client.
 
 | Tag | Size [bytes] | Value | Description | 
@@ -72,7 +71,7 @@ server -> client: [ msg_len, cid, time, payload ]
 
 ![](sequence_diagrams/01_send.svg)
 
-#### Time Encoding
+### Time Encoding
 [ mm, ss, ms, µs, ns ]
 | Byte| Range | Description | Symbol |
 |---|---|---|---|
@@ -84,7 +83,7 @@ server -> client: [ msg_len, cid, time, payload ]
 
 ---
 
-### A1 - enroll_c - client assigned id's
+## A1 - enroll
 To use this command, client has been preconfigured with an Id.
 So the rigth filter is used for the right Id.
 
@@ -112,107 +111,60 @@ server -> client: [ msg_len, cid, res ]
 
 ---
 
-### A2 - enroll_s - server assigned id's
-By using this command there is no need for a preplanned Id, since the Server assignes Id's.
-But in order to use it, the Server has to figure out where each client i located in the room, after the Id i assigned.
-
-| Tag | Size [bytes] | Value | Description | 
-|---|---|---|---|
-| msg_len | 2 | - | Length of message |
-| cid | 1 | 0xA2 | Command Id |
-| client_id | 1 | 0x01-0xFF | Assigned client id |
-| ack | 1 | 0x01 | Accepted |
-
-<!--
-```
-@startuml A2_enrole_s
-server <- client: [ msg_len, cid ]
-server -> client: [ msg_len, cid, client_id ]
-group succesful
-    server <- client: [ msg_len, cid, ack]
-end
-@enduml
-```
--->
-
-![](sequence_diagrams/A2_enrole_s.svg)
-
----
-
-### B3 - set_sound_format
+## B3 - set_sound_format
 Sets sound format.
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
 | msg_len | 2 | - | Length of message |
 | cid | 1 | 0xB3 | Command Id |
-| format_id | 1 | 0x01-0xFF | Payload format type |
-| ack | 1 | 0x01 | Acknolegment |
+| format_id | 1 | 0x01-0x04 | Payload format type. Supported types can be found under [supported formats](#supported-formats) |
+| raw_setup | 3 | - | (Only used if format_id == 0x01) Bytes describing how to handle the Raw file. Described in [raw_setup](#rawsetup) |
 
 <!--
 ```
 @startuml B3_set_sound_format
-server -> client: [ msg_len, cid, format_id ]
-group succesful
-    server <- client: [ msg_len, cid, ack ]
-end
+server -> client: [ msg_len, cid, format_id, (raw_cid) ]
 @enduml
 ```
 -->
 
 ![](sequence_diagrams/B3_set_sound_format.svg)
 
-**Supported** **format**
-| Id | Name |
-|--- |--- |
-| 0x01 | Raw |
-| 0x02 | WAV |
-| 0x03 | FLAC|
-| 0x04 | PCM |
+### Supported formats
+| Id | Name | Notes |
+|--- |--- |---|
+| 0x01 | Raw | Raw only supports Mono |
+| 0x02 | WAV ||
+| 0x03 | FLAC||
+| 0x04 | PCM ||
+
+### raw_setup 
+
+[ sample_rate, sample_resolution ]
+
+| Name | Size [Bytees] | Value | Description | Notes |
+| ---|---|--- |---|---|
+| sample_rate | 2 | 1200 Hz | Sample rate | Other rates should eventually be supported |
+| sample_resolution | 1 | 16 bits | Number of bits per sample | Eventually other resolutions could be supported |
 
 ---
 
-### B4 - set_sample_rate
-Sets the sample rate of the music
+## F1 - checkCon
+Used the ckeck Connection on SZP level
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
 | msg_len | 2 | - | Length of message |
-| cid | 1 | 0xB4 | Command Id |
-| sample_rate | 2 | - | Sample rate |
-| ack | 1 | 0x01 | Acknolegment |
-
-Supported sample rates: **1200**, **42000** [Hz] 
-
-<!--
-```
-@startuml B4_set_sound_compression
-server -> client: [ msg_len, cid, sample_rate ]
-group succesful
-    server <- client: [ msg_len, cid, ack ]
-end
-@enduml
-```
--->
-
-![](sequence_diagrams/B4_set_sound_compression.svg)
-
----
-
-### F1 - checkCon
-Used the ckeck Connection on SZP level
-
-| Tag | Size [bytes] | Description | 
-|---|---|---|
-| msg_len | 2 | - | Length of message |
-| cid | 1 | Command Id | 
+| cid | 1 | 0xF1 | Command Id |
+| ack | 1 | 0x01 | Acknolegment | 
 
 <!--
 ```
 @startuml F1_check_con
 server -> client: [ msg_len, cid ]
 group succesful
-    server <- client: [ msg_len, cid ]
+    server <- client: [ msg_len, cid, ack ]
 end
 @enduml
 ```
