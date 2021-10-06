@@ -16,7 +16,8 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 | IPv | IPv4 |
 | Transport protocol | UDP |
 | Port | 1695 ( Seemingly not used ) |
-| Transmission encoding | utf-8 |
+| Text encoding | utf-8 |
+| Size of msg_len | 2 bytes |
 
 ## Main Structure
 
@@ -44,8 +45,6 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 |||
 | 0xA1 | enroll_c | Used by client to enroll |
 | 0xA2 | enroll_s | Used by client to enroll |
-| 0xB1 | set_time_encode | Sets the encoding of the time |
-| 0xB2 | set_size_msg_len | Sets size of msg_len |
 | 0xB3 | set_sound_compression | Sets the compression for the music |
 | 0xB4 | set_sample_rate | Sets the sample rate of the music |
 |||
@@ -54,15 +53,13 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 ---
 
 ### 01 - send
-
-To use this command, client has been preconfigured with a Id.
-So the rigth filters is used for the right Id.
+This command is used to send sound data to the client.
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
+| msg_len | 2 | - | Length of message |
 | cid | 1 | 0x01 | Command Id |
-| time | Depends on encoding | - | Time to play the block of sound |
+| time | 5 | - | Time to play the block of sound |
 | payload | 1 | - | Payload |
 
 <!--
@@ -75,16 +72,29 @@ server -> client: [ msg_len, cid, time, payload ]
 
 ![](sequence_diagrams/01_send.svg)
 
+#### Time Encoding
+[ mm, ss, ms, µs, ns ]
+| Byte| Range | Description | Symbol |
+|---|---|---|---|
+| 1 | [ 0-60 ] | Minute | mm |
+| 2 | [ 0-60 ] | Second | ss |
+| 3 | [ 0-1000 ] | Mili second | ms |
+| 4 | [ 0-1000 ] | Micro second | µs |
+| 5 | [ 0-1000 ] | Nano second | ns |
 
 ---
 
 ### A1 - enroll_c - client assigned id's
-To use this command, client has been preconfigured with a Id.
-So the rigth filters is used for the right Id.
+To use this command, client has been preconfigured with an Id.
+So the rigth filter is used for the right Id.
+
+In order for the client to be configured with an Id, it has to be planned where each client is located in the room, the master should then have the plan so it knows where wich id is located.
+A client is then configured according to where it is located. And then uses this Id to enroll.
+
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
+| msg_len | 2 | - | Length of message |
 | cid | 1 | 0xA1 | Command Id |
 |  client_id | 1 | 0x01-0xFF | Assigned client id (0 is reserved for server) |
 | res | 1 | 0 \| 1 | denie \| accept |
@@ -103,11 +113,12 @@ server -> client: [ msg_len, cid, res ]
 ---
 
 ### A2 - enroll_s - server assigned id's
-To use this command, it has to be figured out afterwurds which client needs what filter.
+By using this command there is no need for a preplanned Id, since the Server assignes Id's.
+But in order to use it, the Server has to figure out where each client i located in the room, after the Id i assigned.
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
+| msg_len | 2 | - | Length of message |
 | cid | 1 | 0xA2 | Command Id |
 | client_id | 1 | 0x01-0xFF | Assigned client id |
 | ack | 1 | 0x01 | Accepted |
@@ -128,80 +139,20 @@ end
 
 ---
 
-### B1 - set_time_encode
-Defines what encoding the clock uses.
+### B3 - set_sound_format
+Sets sound format.
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
-| cid | 1 | 0xB1 | Command Id |
-| encoding_id | 1 | 0x01-0xFF | Encoding Id |
-| ack | 1 | 0x01 | Acknolegment |
-
-<!--
-```
-@startuml B1_set_time_encode
-server -> client: [ msg_len, cid, encoding_id ]
-group succesful
-    server <- client: [ msg_len, cid, ack ]
-end
-@enduml
-```
--->
-
-![](sequence_diagrams/B1_set_time_encode.svg)
-
-**Supported** **time** **encodings**
-| Id | Name |
-|--- |--- |
-| 0x01 | hh:mm:ss:ms |
-| 0x02 | mm:ss:ms:µs |
-| 0x03 | mm:ss:ms:µs:ns |
-
----
-
-### B2 - set_size_msg_len
-Sets the size of the msg_len.
-With a size of 2 bytes, the payload can maximum be 65.535 bytes long.
-The change of msg_len first takes place AFTER the client has ackoleged 
-
-| Tag | Size [bytes] | Value | Description | 
-|---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
-| cid | 1 | 0xB2 | Command Id |
-| size | 1 | 0x01-0xFF | Size of msg_len |
-| ack | 1 | 0x01 | Acknolegment |
-
-<!--
-```
-@startuml B2_set_time_encode
-server -> client: [ msg_len, cid, size ]
-group succesful
-    server <- client: [ msg_len, cid, ack ]
-end
-@enduml
-```
--->
-
-![](sequence_diagrams/B2_set_time_encode.svg)
-
----
-
-### B3 - set_sound_compression
-Sets the size of the payload_len.
-With a size of 2 bytes, the payload can maximum be 65.535 bytes long.
-
-| Tag | Size [bytes] | Value | Description | 
-|---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
+| msg_len | 2 | - | Length of message |
 | cid | 1 | 0xB3 | Command Id |
-| compression_id | 1 | 0x01-0xFF | Payload compression type |
+| format_id | 1 | 0x01-0xFF | Payload format type |
 | ack | 1 | 0x01 | Acknolegment |
 
 <!--
 ```
-@startuml B3_set_sound_compression
-server -> client: [ msg_len, cid, compression_id ]
+@startuml B3_set_sound_format
+server -> client: [ msg_len, cid, format_id ]
 group succesful
     server <- client: [ msg_len, cid, ack ]
 end
@@ -209,12 +160,15 @@ end
 ```
 -->
 
-![](sequence_diagrams/B3_set_sound_compression.svg)
+![](sequence_diagrams/B3_set_sound_format.svg)
 
-**Supported** **compressions**
+**Supported** **format**
 | Id | Name |
 |--- |--- |
-| 0x01 | Uncompressed |
+| 0x01 | Raw |
+| 0x02 | WAV |
+| 0x03 | FLAC|
+| 0x04 | PCM |
 
 ---
 
@@ -223,7 +177,7 @@ Sets the sample rate of the music
 
 | Tag | Size [bytes] | Value | Description | 
 |---|---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
+| msg_len | 2 | - | Length of message |
 | cid | 1 | 0xB4 | Command Id |
 | sample_rate | 2 | - | Sample rate |
 | ack | 1 | 0x01 | Acknolegment |
@@ -246,10 +200,11 @@ end
 ---
 
 ### F1 - checkCon
+Used the ckeck Connection on SZP level
 
 | Tag | Size [bytes] | Description | 
 |---|---|---|
-| msg_len | Depends on encoding | - | Length of message |
+| msg_len | 2 | - | Length of message |
 | cid | 1 | Command Id | 
 
 <!--
