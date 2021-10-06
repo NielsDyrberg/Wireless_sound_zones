@@ -47,6 +47,7 @@ sudo mv ./Setup_files/hostapd.conf /etc/hostapd/
 
 # Makes sure WiFi is not blocked
 sudo rfkill unblock wlan
+sudo rfkill unblock wifi
 
 echo "Finished setting up Access Point"
 
