@@ -124,7 +124,7 @@ Sets sound format.
 <!--
 ```
 @startuml B3_set_sound_format
-server -> client: [ msg_len, cid, format_id, (raw_cid) ]
+server -> client: [ msg_len, cid, format_id, (raw_setup) ]
 @enduml
 ```
 -->
