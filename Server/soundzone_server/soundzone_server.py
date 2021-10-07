@@ -1,36 +1,34 @@
 
-import time
-import socket
-from soundzone_protocol import SoundZoneProtocol
+from soundzone_protocol import SZPApl
+from data_transport import DataTransport, get_ip_from_name
+
+
+NUMBER_OF_CLIENTS = 8
 
 
 class SoundZoneServer:
     def __init__(self):
-        # obj of szp
-        self.szp = SoundZoneProtocol()
+        self.clients = [None] * NUMBER_OF_CLIENTS
 
-    def send(self, msg):
-        """
-        Makes the server connect to the client and then sends the msg.
-        :param msg: Message to send
-        :return: None (Maybe eventually a ack)
-        """
-        self.szp.connect(self.szp.ip['client1'])
-        for i in range(1, 5):
-            self.szp.send(msg)
-            time.sleep(1)
+    def enroll_client(self):
+        receive_client = DataTransport(get_ip_from_name("all"))
+        rcv_payload, client_ip = receive_client.receive(return_sender_addr=True)
 
-    def send_to(self, msg, address):
-        """
-        (Future development)
-        Sends message to specific address
-        :param msg: Message to send
-        :param address: Ip address of where to send
-        :return: None (Maybe eventually a ack)
-        """
+        szp = SZPApl()
+        decoded_payload = szp.decode(rcv_payload)
+        # self.clients[decoded_payload.payload["enroll"].id] = DataTransport(client_ip)
+
+    def manual_add_client(self, client_id: int, client_name: str):
+        if self.clients[client_id] is None:
+            self.clients[client_id] = DataTransport(get_ip_from_name(client_name))
+        else:
+            raise Exception("Client Id is not empty!")
+
+    def run(self):
         pass
 
 
 if __name__ == "__main__":
-    test_obj = SoundZoneServer()
-    test_obj.send("Hello World")
+    main_obj = SoundZoneServer()
+    main_obj.run()
+

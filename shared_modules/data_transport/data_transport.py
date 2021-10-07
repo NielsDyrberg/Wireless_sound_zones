@@ -53,7 +53,7 @@ class DataTransport:
 
         if self._s is not None:
             try:
-                self._s.bind((self.ADDR, self._PORT))
+                self._s.bind((self._ADDR, self._PORT))
                 self._s.listen(1)
             except OSError as msg:
                 self._s.close()
@@ -105,10 +105,12 @@ class DataTransport:
 
             if len(payload) - self._HEADER_SIZE == payload_len:
                 # print("Full msg received")  # Debug msg
+                payload = payload[self._HEADER_SIZE:]
+                payload = payload.decode()
                 if return_sender_addr:
-                    return payload[self._HEADER_SIZE:], address
+                    return payload, address
                 else:
-                    return payload[self._HEADER_SIZE:]
+                    return payload
 
     def send(self, msg):
         """
@@ -119,6 +121,7 @@ class DataTransport:
         self._connect()
 
         header = bytes(f"{len(msg):<{self._HEADER_SIZE}}", encoding=self._ENCODING)
+        msg = bytes(msg, self._ENCODING)
         msg = header+msg
         # print(msg)  # Debug msg
         self._s.send(msg)

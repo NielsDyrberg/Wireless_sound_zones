@@ -15,7 +15,6 @@ class X01Send:
         """
         encoded_send = ""
         encoded_send += self.time.encode()
-        # [x.to_bytes(16, "big").hex() for x in self.payload]
         encoded_send += "".join(["{:02X}".format(x) for x in self.payload])
         return encoded_send
 
@@ -25,9 +24,10 @@ class X01Send:
         :return: None
         """
         time_buffer = buffer[:LEN_TIME]
-        self.payload = buffer[LEN_TIME:]
         self.time = Time()
         self.time.decode(time_buffer)
+
+        self.payload = [((x << 8) + y) for x, y in zip(buffer[LEN_TIME::2], buffer[LEN_TIME+1::2])]
 
 
 class Time:
