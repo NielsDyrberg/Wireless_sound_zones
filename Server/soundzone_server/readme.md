@@ -23,7 +23,8 @@ SoundZoneServer --* DataTransport
 
 class SoundZoneServer {
     + __init__()
-    + send()
+    + enroll_client()
+    + manual_add_client()
 }
 
 class SZPApl {

@@ -11,7 +11,7 @@ def test_receive_data_pack():
     szp = SZPApl()
     szp.decode(msg_rcv)
 
-    print(szp.payload.payload)
+    print(szp.command.payload)
 
 
 if __name__ == "__main__":

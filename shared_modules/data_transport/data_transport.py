@@ -3,6 +3,11 @@ import socket
 
 
 def get_ip_from_name(name):
+    """
+    Function used to retrieve ip's from _IP dict
+    :param name: hostname of the wanted device
+    :return: str, whit ip
+    """
     try:
         return _IP[name]
     except KeyError:
@@ -10,7 +15,7 @@ def get_ip_from_name(name):
         return None
 
 
-_IP = {
+_IP = {  # Dictionary containing hostnames and IP's
     "local": '127.0.0.1',
     "all": '0.0.0.0',
     "master": '192.168.1.35',
@@ -20,14 +25,67 @@ _IP = {
 PORT = 1695  # port # for tcp
 HEADER_SIZE = 16  # two bytes for header size
 ADDRESS_FAMILY = socket.AF_INET
-SOCK_TYPE = socket.SOCK_STREAM
-ENCODING = "utf-8"
-BUFFER_LEN = 8
+SOCK_TYPE = socket.SOCK_STREAM  # Sock stream is TCP, should be UDP to follow SZP standard.
+ENCODING = "utf-8"  # What encoding to use when encoding text
+BUFFER_LEN = 8  # Length of rx buffer
 
 
 class DataTransport:
+    """
+    Class used to bind the 7th later SZP and the lower transport layer (UDP)
+
+    Attributes
+    ----------
+    buffer_len: int
+        The length of the rx buffer
+    _ADDR: str
+        IP address where to communicate
+    _PORT: int
+        On what port to communicate
+    _HEADER_SIZE: int
+        The length of the header
+    _ENCODING: str
+        The encoding to use for strings
+    _ADDRESS_FAMILY: socket.AddressFamily
+        The address family used
+    _SOCK_TYPE: socket.SocketKind
+        The socket type used
+    _s: socket object
+        Contains the socket used for transmission
+    _sender_socket:
+        Socket of the sender
+    _port_open: bool
+        Keeps track of the status of the port
+    _connected: bool
+        Keeps track on if the socket is connected
+
+    Methods
+    -------
+    __init__()
+        Initiates the class parameters
+    _open_port()
+        Opens port to allow incoming connections
+    _close()
+        Closes #_s socket
+    _connect()
+        Connects a #_s socket to the specified socket (specified by #_ADDR).
+    receive(return_sender_addr)
+        Used to receive data sent from another socket.
+    send(msg):
+        Sends a msg to #_s socket specified by #_ADDR
+    """
     def __init__(self, address, port=PORT, header_size=HEADER_SIZE, encoding=ENCODING, addr_family=ADDRESS_FAMILY,
                  socket_type=SOCK_TYPE, buffer_len=BUFFER_LEN):
+        """
+        Initiates the class parameters
+        :param address: IP where to communicate
+        :param port: On what port to communicate
+        :param header_size: The length of the header
+        :param encoding: The encoding to use for strings
+        :param addr_family: The address family used
+        :param socket_type: The socket type used
+        :param buffer_len: The length of the rx buffer
+        """
         self.buffer_len = buffer_len
         self._ADDR = address
         self._PORT = port
@@ -41,7 +99,7 @@ class DataTransport:
         self._port_open = False
         self._connected = False
 
-    def _open_port(self):
+    def _open_port(self) -> None:
         """
         Opens port to allow incoming connections
         :return: None
@@ -65,11 +123,15 @@ class DataTransport:
             self.port_open = True
 
     def _close(self):
+        """
+        Closes #_s socket
+        :return: None
+        """
         self._s.close()
 
     def _connect(self):
         """
-        Connects a socket to another.
+        Connects a #_s socket to the specified socket (specified by #_ADDR).
         :return: None
         """
         # if self._s is None:
@@ -79,8 +141,11 @@ class DataTransport:
 
     def receive(self, return_sender_addr=False):
         """
-        Prints all received data chunks
-        :return: payload
+        Used to receive data sent from another socket.
+
+        It allows connections specified by #_ADDR
+        :param return_sender_addr: determine if address of the sender socket should be returned
+        :return: payload (, address)
         """
         if not self._port_open:
             self._open_port()
@@ -114,7 +179,8 @@ class DataTransport:
 
     def send(self, msg):
         """
-        Sends a msg to pre-connected address
+        Sends a msg to #_s socket specified by #_ADDR
+
         :param msg: Message to send
         :return: None
         """
