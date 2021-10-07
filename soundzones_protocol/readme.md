@@ -143,7 +143,7 @@ server -> client: [ msg_len, cid, format_id, (raw_setup) ]
 
 [ sample_rate, sample_resolution ]
 
-| Name | Size [Bytees] | Value | Description | Notes |
+| Name | Size [Bytes] | Value | Description | Notes |
 | ---|---|--- |---|---|
 | sample_rate | 2 | 1200 Hz | Sample rate | Other rates should eventually be supported |
 | sample_resolution | 1 | 16 bits | Number of bits per sample | Eventually other resolutions could be supported |
