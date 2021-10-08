@@ -58,7 +58,7 @@ class RawSetup:
     Attributes
     ----------
     sample_rate: int
-    sample_resolution: RawSetup
+    sample_resolution: int
 
     Methods
     -------

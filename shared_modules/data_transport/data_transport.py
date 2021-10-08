@@ -71,7 +71,7 @@ class DataTransport:
         Connects a #_s socket to the specified socket (specified by #_ADDR).
     receive(return_sender_addr)
         Used to receive data sent from another socket.
-    send(msg):
+    send(msg)
         Sends a msg to #_s socket specified by #_ADDR
     """
     def __init__(self, address, port=PORT, header_size=HEADER_SIZE, encoding=ENCODING, addr_family=ADDRESS_FAMILY,

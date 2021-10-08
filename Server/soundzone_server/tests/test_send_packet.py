@@ -23,6 +23,7 @@ def test_send_packet():
     szp.command.time.micro_second = 0x0324
     szp.command.time.nano_second = 0x0244
 
+    encoded_hex = szp.encode()
     szs.clients[client_id].send(szp.encode())
 
 
