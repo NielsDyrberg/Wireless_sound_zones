@@ -17,11 +17,11 @@ def test_send_packet():
     szp = SZPApl()
     szp.add_command(command="send")
     szp.command.payload = [0x4255, 0x5136, 0x1234, 0x5678, 0x1111]
+    szp.command.time.hour = 0x4
     szp.command.time.minute = 0x01
     szp.command.time.second = 0x42
     szp.command.time.mili_second = 0x24
     szp.command.time.micro_second = 0x0324
-    szp.command.time.nano_second = 0x0244
 
     encoded_hex = szp.encode()
     szs.clients[client_id].send(szp.encode())
