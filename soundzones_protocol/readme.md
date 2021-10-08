@@ -27,6 +27,18 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 * CID - Command Id
 * payload - Data to send (Structure depends on the CID)
 
+## Data groups
+
+### Time Encoding
+[ hh, mm, ss, ms, µs ]
+| Byte| Range | Description | Symbol |
+|---|---|---|---|
+| 1 | [0-23] | Hour | hh |
+| 2 | [ 0-60 ] | Minute | mm |
+| 3 | [ 0-60 ] | Second | ss |
+| 4-5 | [ 0-1000 ] | Mili second | ms |
+| 6-7 | [ 0-1000 ] | Micro second | µs |
+
 ## Commands 
 
 ### Command groups
@@ -44,6 +56,8 @@ As it is a 7th layer protocol, it is treated as a Point-Point communication
 | 0x01 | [send](#01---send) | Send a payload to a client |
 |||
 | 0xA1 | [enroll](#a1---enroll) | Used by client to enroll |
+| 0xB1 | reset_time | Used by master to reset time |
+| 0xB2 | sync_time | Used to syncronize master and slave clocks |
 | 0xB3 | [set_sound_format](#b3---setsoundformat) | Sets the format of the music |
 |||
 | 0xF1 | [checkCon](#f1---checkcon) | Used to check connection, used for debug |
@@ -58,7 +72,7 @@ This command is used to send sound data to the client.
 |---|---|---|---|
 | msg_len | 2 | - | Length of message |
 | cid | 1 | 0x01 | Command Id |
-| time | 8 | - | Time to play the block of sound |
+| time | 7 | - | Time to play the block of sound |
 | payload | - | - | Payload |
 
 <!--
@@ -71,15 +85,7 @@ server -> client: [ msg_len, cid, time, payload ]
 
 ![](sequence_diagrams/01_send.svg)
 
-### Time Encoding
-[ mm, ss, ms, µs, ns ]
-| Byte| Range | Description | Symbol |
-|---|---|---|---|
-| 1 | [ 0-60 ] | Minute | mm |
-| 2 | [ 0-60 ] | Second | ss |
-| 3-4 | [ 0-1000 ] | Mili second | ms |
-| 5-6 | [ 0-1000 ] | Micro second | µs |
-| 7-8 | [ 0-1000 ] | Nano second | ns |
+
 
 ---
 
@@ -108,6 +114,52 @@ server -> client: [ msg_len, cid, res ]
 -->
 
 ![](sequence_diagrams/A1_enrole_c.svg)
+
+---
+
+## 0xB1 - reset_time
+Used by master to reset time
+
+| Tag | Size [bytes] | Value | Description | 
+|---|---|---|---|
+| msg_len | 2 | - | Length of message |
+| cid | 1 | 0xB1 | Command Id |
+
+<!--
+```
+@startuml B1_reset_time
+server -> client: [ msg_len, cid ]
+@enduml
+```
+-->
+![](sequence_diagrams/B1_reset_time.svg)
+---
+
+## 0xB2 - sync_time
+Used to syncronize master and slave clocks |
+
+| Tag | Size [bytes] | Value | Description | 
+|---|---|---|---|
+| msg_len | 2 | - | Length of message |
+| cid | 1 | 0xB2 | Command Id |
+|  T2 | 1 | - | Timestamp at the server, when recieving |
+|  T3 | 1 | - | Timestamp at the server, when transmitting |
+
+<!--
+```
+@startuml B2_sync_time
+server -> client: [ msg_len, cid ]
+server <- client: [ msg_len, cid ]
+note right: T1
+note left: T2
+server -> client: [ msg_len, cid, T2, T3 ]
+note left: T3
+note right: T4
+@enduml
+```
+-->
+
+![](sequence_diagrams/B2_sync_time.svg)
 
 ---
 
