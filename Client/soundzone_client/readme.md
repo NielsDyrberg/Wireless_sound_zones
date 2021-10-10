@@ -1,50 +1,46 @@
-# SoundZoneProtocol Client
+
 <!-- 
 To compile puml use: (Assuming plantuml you are in the directory)
 plantuml.jar -tsvg readme.md -o diagrams
 -->
 
+# SoundZoneProtocol Client
+
+
 version = 0.0.1
 
+**There should be added some more documentation at some point, but i am not sure what.**
 
 
----
+## Class diagram
 
 <!--
 ```
 @startuml class_diagram
+
+SoundZoneServer --* DataTransport
+
 package "SZP" {
-    SoundZoneProtocol "1" --* "1" _CommandIDs
+    SoundZoneServer --* SZPApl
 }
-package client {
-    SoundZoneClient "1" --* "1" SoundZoneProtocol
-}
-SoundZoneProtocol "1" --* "1" DataTransport
 
 
-class SoundZoneClient {
+class SoundZoneServer {
+    + _server
+
     + __init__()
-    + receive()
+    + manual_add_server(name)
+    + recieve()
 }
 
-class SoundZoneProtocol {
-    + ip
+class SZPApl {
+    + __init__()
+    + add_command()
+    + encode()
+    + decode( buffer )
 
-    - _get_ip_from_name(name)
-    + __init__(name)
-    + receive(sender)
-    + send(receiver, obj_msg)
-}
-
-class _CommandIDs {
-    + send
-    + enroll_c
-    + enroll_s
-    + set_time_encode
-    + set_size_payload
-    + set_sound_compression
-    + set_sample_rate
-    + checkCon
+    - _call_command_encode()
+    - _call_command_decode()
 }
 
 class DataTransport {

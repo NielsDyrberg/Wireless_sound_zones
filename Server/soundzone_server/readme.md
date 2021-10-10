@@ -1,24 +1,25 @@
-# SoundZone Server
-
-version = 0.0.1
-
 <!-- 
 To compile puml use: (Assuming plantuml you are in the directory)
 plantuml.jar -tsvg readme.md -o diagrams
 -->
 
+# SoundZone Server
+
+version = 0.0.1
+
+**There should be added some more documentation at some point, but i am not sure what.**
+
+## Class diagram
+
 <!--
 ```
 @startuml class_diagram
 
-package "SZP" {
-    SZPApl --* XF1_checkConn
-}
-
-SoundZoneServer --* SZPApl
-
-
 SoundZoneServer --* DataTransport
+
+package "SZP" {
+    SoundZoneServer --* SZPApl
+}
 
 
 class SoundZoneServer {
@@ -35,13 +36,6 @@ class SZPApl {
 
     - _call_command_encode()
     - _call_command_decode()
-}
-
-class XF1_checkConn {
-    - _ack
-    + __init__()
-    + encode()
-    + decode( buffer )
 }
 
 class DataTransport {

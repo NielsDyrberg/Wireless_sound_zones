@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="455px" preserveAspectRatio="none" style="width:259px;height:455px;background:#FFFFFF;" version="1.1" viewBox="0 0 259 455" width="259px" zoomAndPan="magnify"><defs><filter height="300%" id="f1adii5jwdbh9x" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><ellipse cx="181.08" cy="290.6227" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="66.08" ry="15.6227" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="76" x="140.08" y="295.1393">Enroll Client</text><ellipse cx="180.9968" cy="21.5429" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="54.9968" ry="15.5429" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="147.4968" y="26.0595">Sync time</text><ellipse cx="180.9297" cy="87.5784" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="59.4297" ry="15.5784" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="67" x="144.4297" y="92.095">Play music</text><!--MD5=[e6001af16d4774e0fdad2715570119d9]
+entity master--><ellipse cx="30.5" cy="22.5" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M30.5,30.5 L30.5,57.5 M17.5,38.5 L43.5,38.5 M30.5,57.5 L17.5,72.5 M30.5,57.5 L43.5,72.5 " fill="none" filter="url(#f1adii5jwdbh9x)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43" x="9" y="92.5332">master</text><!--MD5=[213fbd697e5318ffb1c0355719e308b6]
+entity client_1--><ellipse cx="30.5" cy="140.5" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M30.5,148.5 L30.5,175.5 M17.5,156.5 L43.5,156.5 M30.5,175.5 L17.5,190.5 M30.5,175.5 L43.5,190.5 " fill="none" filter="url(#f1adii5jwdbh9x)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="49" x="6" y="210.5332">client_1</text><!--MD5=[06dfa3662cf1e2ec5c730cf874c6968e]
+entity client_2--><ellipse cx="30.5" cy="258.5" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M30.5,266.5 L30.5,293.5 M17.5,274.5 L43.5,274.5 M30.5,293.5 L17.5,308.5 M30.5,293.5 L43.5,308.5 " fill="none" filter="url(#f1adii5jwdbh9x)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="49" x="6" y="328.5332">client_2</text><!--MD5=[89a37f8643bd5c62b74773b5f7632b54]
+entity client_n--><ellipse cx="30.5" cy="376.5" fill="#FEFECE" filter="url(#f1adii5jwdbh9x)" rx="8" ry="8" style="stroke:#A80036;stroke-width:1.5;"/><path d="M30.5,384.5 L30.5,411.5 M17.5,392.5 L43.5,392.5 M30.5,411.5 L17.5,426.5 M30.5,411.5 L43.5,426.5 " fill="none" filter="url(#f1adii5jwdbh9x)" style="stroke:#A80036;stroke-width:1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="49" x="6" y="446.5332">client_n</text><!--MD5=[6022d4980305390c4bb0b878d5c2454a]
+link master to Sync_time--><path d="M52.15,49.91 C72.78,45.33 105.24,38.11 132.28,32.1 " fill="none" id="master-to-Sync_time" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="137.27,31,127.6166,29.0476,132.3891,32.0847,129.352,36.8571,137.27,31" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[9753e663b25bd21c06f12c7d25fda071]
+link master to play_music--><path d="M52.15,59.09 C72.26,63.56 103.59,70.52 130.21,76.43 " fill="none" id="master-to-play_music" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="135.12,77.53,127.202,71.6729,130.2391,76.4453,125.4666,79.4824,135.12,77.53" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[fce9e72c462bd34179a4b4888d031a0a]
+link client_1 to Enroll_client--><path d="M55.03,191.2 C83.09,213.5 129.67,250.51 157.34,272.49 " fill="none" id="client_1-to-Enroll_client" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="161.28,275.63,156.7276,266.8964,157.3673,272.517,151.7467,273.1567,161.28,275.63" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[5173781ea2cf20f092622aa86ade66f6]
+link client_2 to Enroll_client--><path d="M55.03,290.5 C69.96,290.5 90.13,290.5 109.9,290.5 " fill="none" id="client_2-to-Enroll_client" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="114.91,290.5,105.91,286.5,109.91,290.5,105.91,294.5,114.91,290.5" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[6db2bcd51ea0613e75eb3ecb1bdd4b81]
+link client_n to Enroll_client--><path d="M55.03,389.8 C83.09,367.5 129.67,330.49 157.34,308.51 " fill="none" id="client_n-to-Enroll_client" style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#A80036" points="161.28,305.37,151.7467,307.8433,157.3673,308.483,156.7276,314.1036,161.28,305.37" style="stroke:#A80036;stroke-width:1.0;"/><!--MD5=[3854aeb189af74a9e4fb2c55bdfec99b]
+@startuml use_cases
+left to right direction
+
+usecase "Enroll Client" as Enroll_client
+usecase "Sync time" as Sync_time
+usecase "Play music" as play_music
+
+master ..> Sync_time
+master ..> play_music
+client_1 ..> Enroll_client
+client_2 ..> Enroll_client
+client_n ..> Enroll_client
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 15:43:48 CEST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>

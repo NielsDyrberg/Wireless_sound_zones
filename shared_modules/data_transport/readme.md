@@ -8,6 +8,36 @@ It is used to transport data between a server and clients,
 for the SoundZone Protocol.
 In the layer topology this module is between layer 7 (SZP) and layer 4
 
+## How to use
+
+This section will give a few examples on how to use the class.
+
+### Create socket
+
+```Python
+hostname = "hostname_of_device_communicating"
+comm_socket = DataTransport(get_ip_from_name(hostname))  # Creates socket from where to communicate
+```
+
+### Recieve
+
+```Python
+hostname = "hostname_of_the_sender"
+receive_socket = DataTransport(get_ip_from_name(hostname))  # Creates socket to receive from
+
+rcv_payload, client_ip = receive_socket.receive(return_sender_addr=True)  # Returns the recieved message (and client_ip if return_sender_addr is true)
+```
+
+### Transmit
+
+```python
+hostname = "hostname_of_the_reciever"
+send_socket = DataTransport(get_ip_from_name(hostname))
+
+msg_to_send = '83'  # Some hex encoded string
+send_socket.send(msg_to_send)
+```
+
 
 ## Class diagram
 
@@ -51,6 +81,15 @@ class socket {
     + connect()
     + close()
 }
+
+note right of socket::SOCK_STREAM
+    TCP
+end note
+
+note right of socket::SOCK_DGRAM
+    UDP
+end note
+
 
 @enduml
 ```
