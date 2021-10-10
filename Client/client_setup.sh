@@ -11,6 +11,9 @@ sudo apt-get -y upgrade
 # Add new packages to install in the list below
 sudo apt -y install python3-pip 
 
+# Install python packages
+sudo pip install virtualenv
+
 echo "Finished installing packages"
 
 ############################################################################
