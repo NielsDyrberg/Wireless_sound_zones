@@ -10,6 +10,9 @@ sudo apt-get -y upgrade
 # Add new packages to install in the list below
 sudo apt-get -y install hostapd python3-pip 
 
+# Install python packages
+sudo pip install virtualenv
+
 echo "Finished installing packages"
 
 ############################################################################
