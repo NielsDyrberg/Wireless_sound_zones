@@ -4,11 +4,15 @@
 
 ############################################################################
 # Install and update standard packages
-sudo apt update
-sudo apt -y upgrade
+sudo apt-get update
+sudo apt-get -y upgrade
+
 
 # Add new packages to install in the list below
-sudo apt -y install git python3-pip virtualenviroments
+sudo apt -y install python3-pip 
+
+# Install python packages
+sudo pip3 install virtualenv
 
 echo "Finished installing packages"
 
@@ -24,7 +28,7 @@ echo "Finished setting up hostname"
 ############################################################################
 # Connect to WiFi
 
-sudo sed -i "3i country=DK" /etc/wpa_supplicant/wpa_supplicant.conf # Set country code
+
 
 
 PS3='How do you wish to configure the WiFi '
@@ -49,6 +53,11 @@ select fav in "${wifi_setup[@]}"; do
             *) echo "invalid option $REPLY";;
     esac
 done
+
+sudo sed -i "3i country=DK" /etc/wpa_supplicant/wpa_supplicant.conf # Set country code
+
+sudo rfkill unblock 0 # Enables the wifi, should not have to be used for this to work, but it does not work without.
+
 
 
 

@@ -4,11 +4,14 @@
 
 ############################################################################
 # Install and update standard packages
-sudo apt update
-sudo apt -y upgrade
+sudo apt-get update
+sudo apt-get -y upgrade
 
 # Add new packages to install in the list below
-sudo apt -y install git hostapd python3-pip virtualenviroments
+sudo apt-get -y install hostapd python3-pip 
+
+# Install python packages
+sudo pip3 install virtualenv
 
 echo "Finished installing packages"
 
@@ -38,12 +41,15 @@ sudo systemctl enable systemd-networkd
 sudo sed -i "1i denyinterfaces wlan0 eth0" /etc/dhcpcd.conf # append to line 1 of file
 sudo printf "interface br0" | sudo tee -a /etc/dhcpcd.conf # end of file
 
-# Makes sure WiFi is not blocked
-sudo rfkill unblock wlan
+
 
 # Configure AP
-sudo mkdir /etc/hostapd/
+
+
 sudo mv ./Setup_files/hostapd.conf /etc/hostapd/
+
+# Makes sure WiFi is not blocked
+sudo rfkill unblock 0
 
 
 echo "Finished setting up Access Point"
