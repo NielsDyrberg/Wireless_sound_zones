@@ -36,8 +36,8 @@ class SoundZoneClient:
 
     def receive(self):
         """
-        Used to receive a hex string from the server
-        :return: Hex string
+        Used to receive a Bytearray from the server
+        :return: Bytearray
         """
         if isinstance(self._server, DataTransport):
             return self._server.receive()

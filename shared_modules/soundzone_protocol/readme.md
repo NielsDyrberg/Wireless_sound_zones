@@ -61,12 +61,12 @@ This section will give a few examples on how to use the class.
 szp = SZPApl()  # Create an object of SZPApl
 szp.add_command(command="send")  # Define the command to use
 # The chunk of lines are filling the command data
-szp.command.payload = [0x4255, 0x5136, 0x1234, 0x5678, 0x1111]
+szp.command.payload = [0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77]
+szp.command.time.hour = 0x4
 szp.command.time.minute = 0x01
 szp.command.time.second = 0x42
 szp.command.time.mili_second = 0x24
 szp.command.time.micro_second = 0x0324
-szp.command.time.nano_second = 0x0244
 
 encoded_hex = szp.encode()  # Encode the object
 ```
@@ -74,7 +74,7 @@ encoded_hex = szp.encode()  # Encode the object
 ### Decode
 
 ```Python
-msg_rcv = '01014200240324024442555136123456781111' # The hex string that would come out of the encoding abobe
+msg_rcv = b'\x00\x0f\x01\x04\x01\x42\x00\x24\x03\x24\x11\x22\x33\x44\x55\x66\x77' # The Bytearray that would come out of the encoding abobe
 
 szp = SZPApl()  # Create an object of SZPApl
 szp.decode(msg_rcv)  # Decode the hex string. If succesfull the object will afterwurds contain all the object field filled out.
@@ -139,11 +139,11 @@ class XF1_checkConn {
 }
 
 class Time {
+    + hour
     + minute
     + second
     + mili_second
     + micro_second
-    + nano_second
 
     + encode()
     + decode( buffer )

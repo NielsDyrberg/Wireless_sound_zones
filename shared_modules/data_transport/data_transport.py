@@ -2,11 +2,11 @@
 import socket
 
 PORT = 1695  # port # for tcp
-HEADER_SIZE = 16  # two bytes for header size
+HEADER_SIZE = 2  # two bytes for header size
 ADDRESS_FAMILY = socket.AF_INET
-SOCK_TYPE = socket.SOCK_STREAM  # Sock stream is TCP, should be UDP to follow SZP standard.
+SOCK_TYPE = socket.SOCK_DGRAM  # UDP
 ENCODING = "utf-8"  # What encoding to use when encoding text
-BUFFER_LEN = 8  # Length of rx buffer
+BUFFER_LEN = 1028  # Length of rx buffer
 
 
 class DataTransport:
@@ -91,7 +91,7 @@ class DataTransport:
         if self._s is not None:
             try:
                 self._s.bind((self._ADDR, self._PORT))
-                self._s.listen(1)
+                # self._s.listen(1)
             except OSError as msg:
                 self._s.close()
                 self._s = None
@@ -113,7 +113,6 @@ class DataTransport:
         Connects a #_s socket to the specified socket (specified by #_ADDR).
         :return: None
         """
-        # if self._s is None:
         self._s = socket.socket(self._ADDRESS_FAMILY, self._SOCK_TYPE)
         self._s.connect((self._ADDR, self._PORT))
         self._connected = True
@@ -129,28 +128,27 @@ class DataTransport:
         if not self._port_open:
             self._open_port()
 
-        self._sender_socket, address = self._s.accept()
-
         payload = bytes()
         new_payload = True
         payload_len = None
 
         while True:
-            tmp_payload = self._sender_socket.recv(self.buffer_len)
+            tmp_payload, (address, port) = self._s.recvfrom(self.buffer_len)
             if new_payload:
                 try:
-                    payload_len = int(tmp_payload[:self._HEADER_SIZE])
+                    payload_len = int.from_bytes(tmp_payload[:self._HEADER_SIZE], 'big')
+                    new_payload = False
                 except ValueError:
                     continue
-                new_payload = False
+
                 # print(f"Receiving new payload with len: {payload_len}")  # Debug msg
 
             payload += tmp_payload
+            print("Here")
 
             if len(payload) - self._HEADER_SIZE == payload_len:
                 # print("Full msg received")  # Debug msg
                 payload = payload[self._HEADER_SIZE:]
-                payload = payload.decode()
                 if return_sender_addr:
                     return payload, address
                 else:
@@ -165,8 +163,7 @@ class DataTransport:
         """
         self._connect()
 
-        header = bytes(f"{len(msg):<{self._HEADER_SIZE}}", encoding=self._ENCODING)
-        msg = bytes(msg, self._ENCODING)
+        header = len(msg).to_bytes(self._HEADER_SIZE, 'big')
         msg = header+msg
         # print(msg)  # Debug msg
         self._s.send(msg)

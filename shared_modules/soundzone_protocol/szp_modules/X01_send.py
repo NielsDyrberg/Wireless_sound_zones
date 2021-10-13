@@ -23,7 +23,7 @@ class X01Send:
     encode()
         Encodes the send package
     decode(buffer: list of ints)
-        Decodes a hex string containing data for a send package.
+        Decodes a Bytearray containing data for a send package.
     """
     def __init__(self):
         """
@@ -32,19 +32,20 @@ class X01Send:
         self.time = TimeEncoding()
         self.payload = []
 
-    def encode(self) -> str:
+    def encode(self) -> bytearray:
         """
         Encodes the send package
-        :return: Encoded hex string
+        :return: Encoded Bytearray
         """
-        encoded_send = ""
-        encoded_send += self.time.encode()
-        encoded_send += "".join(["{:02X}".format(x) for x in self.payload])
+        encoded_send = self.time.encode()
+        list_of_payload = [x.to_bytes(1, 'big') for x in self.payload]
+        for byte in list_of_payload:
+            encoded_send += byte
         return encoded_send
 
     def decode(self, buffer) -> None:
         """
-        Decodes a hex string containing data for a send package.
+        Decodes a Bytearray containing data for a send package.
         :param buffer: List of ints
         :return: None
         """

@@ -46,9 +46,9 @@ class SZPApl:
     add_command()
         Used to add a command to to #command.
     encode()
-        Encodes the class into a hex string.
+        Encodes the class into a bytearray.
     decode()
-        Decodes a buffer Hex string following SoundZone Protocol
+        Decodes a buffer Bytearray following SoundZone Protocol
     """
     def __init__(self):
         """
@@ -97,21 +97,19 @@ class SZPApl:
 
     def encode(self):
         """
-        Encodes the class into a hex string.
-        :return: hex string, encoded as described in SoundZone Protocol
+        Encodes the class into a Bytearray.
+        :return: Bytearray, encoded as described in SoundZone Protocol
         """
-        encoded_apl = "{:02X}".format(self.cid)
+        encoded_apl = self.cid.to_bytes(1, 'big')
         encoded_apl += self.command.encode()
         return encoded_apl
 
     def decode(self, buffer):
         """
-        Decodes a buffer Hex string following SoundZone Protocol
-        :param buffer: Hex string to decode
+        Decodes a buffer Bytearray following SoundZone Protocol
+        :param buffer: Bytearray to decode
         :return: None
         """
-        buffer = [int(x+y, 16) for x, y in zip(buffer[0::2], buffer[1::2])]
-
         self.cid = buffer[0]
         payload = buffer[1:]
 

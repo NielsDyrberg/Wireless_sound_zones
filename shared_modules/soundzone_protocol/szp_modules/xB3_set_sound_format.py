@@ -14,9 +14,9 @@ class XB3SetSoundFormat:
     Methods
     -------
     encode()
-        Encodes the sound format into a hex string
+        Encodes the sound format into a Bytearray
     decode(buffer)
-        Decodes a hex string containing data for a set_sound_format package.
+        Decodes a Bytearray containing data for a set_sound_format package.
     """
     def __init__(self):
         """
@@ -27,11 +27,10 @@ class XB3SetSoundFormat:
 
     def encode(self):
         """
-        Encodes the sound format into a hex string
-        :return: Encoded hex string
+        Encodes the sound format into a Bytearray
+        :return: Encoded Bytearray
         """
-        encoded_send = ""
-        encoded_send += "{:02X}".format(self.format_id)
+        encoded_send = self.format_id.to_bytes(1, 'big')
         if self.format_id == 0x01:
             if self.raw_setup is None:
                 raise Exception("raw_setup obj should be set, it is None")
@@ -40,7 +39,7 @@ class XB3SetSoundFormat:
 
     def decode(self, buffer):
         """
-        Decodes a hex string containing data for a set_sound_format package.
+        Decodes a Bytearray containing data for a set_sound_format package.
         :param buffer: List of ints that should be decoded.
         :return: None
         """
@@ -63,9 +62,9 @@ class RawSetup:
     Methods
     -------
     encode()
-        Encodes the RawSetup into a hex string
+        Encodes the RawSetup into a Bytearray
     decode(buffer)
-        Decodes a hex string containing data for a RawSetup package.
+        Decodes a Bytearray containing data for a RawSetup package.
     """
     def __init__(self):
         """
@@ -77,13 +76,15 @@ class RawSetup:
     def encode(self):
         """
         Encodes the RawSetup package
-        :return: Encoded hex string
+        :return: Encoded Bytearray
         """
-        return "{:04X}{:02X}".format(self.sample_rate, self.sample_resolution)
+        encoded_setup = self.sample_rate.to_bytes(2, 'big')
+        encoded_setup += self.sample_resolution.to_bytes(1, 'big')
+        return encoded_setup
 
     def decode(self, buffer):
         """
-        Decodes a hex string containing data for a RawSetup package.
+        Decodes a Bytearray containing data for a RawSetup package.
         :param buffer: List of ints that should be decoded.
         :return: None
         """

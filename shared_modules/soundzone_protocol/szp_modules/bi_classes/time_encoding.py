@@ -16,9 +16,9 @@ class TimeEncoding:
     -------
     __init__(minute=None, second=None, mil_second=None, mic_second=None, n_second=None)
     encode()
-        Encodes time data into a hex string.
+        Encodes time data into a Bytearray.
     decode(buffer)
-        Decodes a hex string, and fills it into the class variables
+        Decodes a Bytearray, and fills it into the class variables
     """
     def __init__(self, hour=None, minute=None, second=None, mil_second=None, mic_second=None, n_second=None):
         """
@@ -35,17 +35,21 @@ class TimeEncoding:
         self.mili_second = mil_second
         self.micro_second = mic_second
 
-    def encode(self) -> str:
+    def encode(self) -> bytearray:
         """
-        Encodes time data into a hex string.
-        :return: Encoded hex string
+        Encodes time data into a Bytearray.
+        :return: Encoded Bytearray
         """
-        return "{:02X}{:02X}{:02X}{:04X}{:04X}".format(self.hour, self.minute, self.second, self.mili_second,
-                                                       self.micro_second)
+        encoded_time = self.hour.to_bytes(1, 'big')
+        encoded_time += self.minute.to_bytes(1, 'big')
+        encoded_time += self.second.to_bytes(1, 'big')
+        encoded_time += self.mili_second.to_bytes(2, 'big')
+        encoded_time += self.micro_second.to_bytes(2, 'big')
+        return encoded_time
 
     def decode(self, buffer):
         """
-        Decodes a hex string, and fills it into the class variables
+        Decodes a Bytearray, and fills it into the class variables
         :param buffer: List of ints
         :return: None
         """
