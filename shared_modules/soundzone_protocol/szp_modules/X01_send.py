@@ -25,7 +25,6 @@ class X01Send:
     decode(buffer: list of ints)
         Decodes a hex string containing data for a send package.
     """
-    # TODO Make buffer into a byte array instead of 2-bytes
     def __init__(self):
         """
         Initiates class variables
@@ -53,4 +52,4 @@ class X01Send:
         self.time = TimeEncoding()
         self.time.decode(time_buffer)
 
-        self.payload = [((x << 8) + y) for x, y in zip(buffer[LEN_TIME::2], buffer[LEN_TIME+1::2])]
+        self.payload = [x for x in buffer[LEN_TIME:]]

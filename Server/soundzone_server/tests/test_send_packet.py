@@ -16,7 +16,7 @@ def test_send_packet():
 
     szp = SZPApl()
     szp.add_command(command="send")
-    szp.command.payload = [0x1111, 0x2222, 0x3333, 0x4444, 0x5555]
+    szp.command.payload = [0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77]
     szp.command.time.hour = 0x4
     szp.command.time.minute = 0x01
     szp.command.time.second = 0x42
