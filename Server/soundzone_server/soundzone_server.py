@@ -1,36 +1,63 @@
 
-import time
-import socket
-from soundzone_protocol import SoundZoneProtocol
+from soundzone_protocol import SZPApl
+from data_transport import DataTransport, get_ip_from_name
+
+
+NUMBER_OF_CLIENTS = 8  # Max number of clients.
 
 
 class SoundZoneServer:
+    """
+    A class used to control a SoundZone Server
+
+    Attributes
+    ----------
+    clients : list of DataTransport
+        Used to store objects to communicate with clients.
+
+    Methods
+    -------
+    enroll_client():
+        Adds a client who requests to be enrolled to list of clients.
+    manual_add_client(client_id: int, client_name: str)
+        Adds a client from #client_id and #client_name
+    """
     def __init__(self):
-        # obj of szp
-        self.szp = SoundZoneProtocol()
+        """
+        Constructs list of clients.
 
-    def send(self, msg):
+        Initially the elements are all None.
         """
-        Makes the server connect to the client and then sends the msg.
-        :param msg: Message to send
-        :return: None (Maybe eventually a ack)
-        """
-        self.szp.connect(self.szp.ip['client1'])
-        for i in range(1, 5):
-            self.szp.send(msg)
-            time.sleep(1)
+        self.clients = [None] * NUMBER_OF_CLIENTS
 
-    def send_to(self, msg, address):
+    def enroll_client(self) -> None:
         """
-        (Future development)
-        Sends message to specific address
-        :param msg: Message to send
-        :param address: Ip address of where to send
-        :return: None (Maybe eventually a ack)
+        Adds a client who requests to be enrolled to list of clients.
+        :return: None
         """
+        receive_client = DataTransport(get_ip_from_name("all"))
+        rcv_payload, client_ip = receive_client.receive(return_sender_addr=True)
+
+        szp = SZPApl()
+        decoded_payload = szp.decode(rcv_payload)
+        # self.clients[decoded_payload.payload["enroll"].id] = DataTransport(client_ip)
+
+    def manual_add_client(self, client_id: int, client_name: str) -> None:
+        """
+        Used to add a client manually. This is if the server already knows the client id and name.
+        :param client_id: The id of the client.
+        :param client_name: hostname of client
+        :return: None
+        """
+        if self.clients[client_id] is None:
+            self.clients[client_id] = DataTransport(get_ip_from_name(client_name))
+        else:
+            raise Exception("Client Id is not empty!")
+
+    def run(self):
         pass
 
 
 if __name__ == "__main__":
-    test_obj = SoundZoneServer()
-    test_obj.send("Hello World")
+    pass
+
