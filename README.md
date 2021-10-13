@@ -1,3 +1,8 @@
+<!-- 
+To compile puml use: (Assuming plantuml you are in the directory)
+plantuml.jar -tsvg readme.md -o diagrams
+-->
+
 # Wireless Sound Zones
 
 Wireless sound zone is a multispeaker client-server audio player, where all clients are time synchronized with the server to play audio synced down to xx ms.
@@ -29,3 +34,65 @@ It´s important to run the setup files login as root, or else you need to manual
 	
 If you do not wish to run the install as root, simply run `sudo rfkill unblock 0` after install. For some reason it cannot run this inside a shell script
 
+## Sequence diagram over general use
+
+This is an overview of how the product should be used.
+The syncronization is not taken into account.
+
+<!--
+```
+@startuml how_to_use
+
+group Turn devices on
+    user -> server: Power on
+    user -> client1: Power on
+    user -> client2: Power on
+    user -> clientN: Power on
+end
+
+group Enroll client1
+    client1 -> server: Enroll me, i am client1
+    client1 <-- server: Thats a'okay
+end
+
+group Enroll client2
+    client2 -> server: Enroll me, i am client2
+    client2 <-- server: Thats a'okay
+end
+
+group Enroll clientN
+    clientN -> server: Enroll me, i am clientN
+    clientN <-- server: Thats a'okay
+end
+
+user -> server: Play this song
+
+group Setup music format
+    server -> client1: This is the sound format
+    server -> client2: This is the sound format
+    server -> clientN: This is the sound format
+end
+
+group Stream music
+    server -> client1: Chunk[1,1] of song
+    server -> client2: Chunk[2,1] of song
+    server -> clientN: Chunk[N,1] of song
+
+    server -> client1: Chunk[1,2] of song
+    server -> client2: Chunk[2,2] of song
+    server -> clientN: Chunk[N,2] of song
+
+    server -> client1: Chunk[1,3] of song
+    server -> client2: Chunk[2,3] of song
+    server -> clientN: Chunk[N,3] of song
+
+    server -> client1: Chunk[1,4] of song
+    server -> client2: Chunk[2,4] of song
+    server -> clientN: Chunk[N,4] of song
+end
+
+@enduml
+```
+-->
+
+![](diagrams/how_to_use.svg)
