@@ -1,27 +1,6 @@
 
 import socket
 
-
-def get_ip_from_name(name):
-    """
-    Function used to retrieve ip's from _IP dict
-    :param name: hostname of the wanted device
-    :return: str, whit ip
-    """
-    try:
-        return _IP[name]
-    except KeyError:
-        print("KeyError")
-        return None
-
-
-_IP = {  # Dictionary containing hostnames and IP's
-    "local": '127.0.0.1',
-    "all": '0.0.0.0',
-    "master": '192.168.1.35',
-    "client1": '192.168.1.36'
-}
-
 PORT = 1695  # port # for tcp
 HEADER_SIZE = 16  # two bytes for header size
 ADDRESS_FAMILY = socket.AF_INET
@@ -74,11 +53,11 @@ class DataTransport:
     send(msg)
         Sends a msg to #_s socket specified by #_ADDR
     """
-    def __init__(self, address, port=PORT, header_size=HEADER_SIZE, encoding=ENCODING, addr_family=ADDRESS_FAMILY,
+    def __init__(self, hostname, port=PORT, header_size=HEADER_SIZE, encoding=ENCODING, addr_family=ADDRESS_FAMILY,
                  socket_type=SOCK_TYPE, buffer_len=BUFFER_LEN):
         """
         Initiates the class parameters
-        :param address: IP where to communicate
+        :param hostname: The hostname of the target to where you want to communicate
         :param port: On what port to communicate
         :param header_size: The length of the header
         :param encoding: The encoding to use for strings
@@ -87,7 +66,7 @@ class DataTransport:
         :param buffer_len: The length of the rx buffer
         """
         self.buffer_len = buffer_len
-        self._ADDR = address
+        self._ADDR = socket.gethostbyname(hostname)
         self._PORT = port
         self._HEADER_SIZE = header_size
         self._ENCODING = encoding

@@ -52,7 +52,7 @@ class DataTransport {
     - _open_port()
     - _close()
     - _connect()
-    + __init__(address, port, header_size, encoding, addr_family, socket_type, buffer_len)
+    + __init__(hostname, port, header_size, encoding, addr_family, socket_type, buffer_len)
     + receive()
     + send(msg)
 

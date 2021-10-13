@@ -2,7 +2,7 @@
 from .bi_classes import *
 
 
-LEN_TIME = 8
+LEN_TIME = 7
 
 
 class X01Send:
@@ -25,6 +25,7 @@ class X01Send:
     decode(buffer: list of ints)
         Decodes a hex string containing data for a send package.
     """
+    # TODO Make buffer into a byte array instead of 2-bytes
     def __init__(self):
         """
         Initiates class variables

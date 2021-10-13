@@ -52,5 +52,5 @@ class TimeEncoding:
         self.hour = buffer[0]
         self.minute = buffer[1]
         self.second = buffer[2]
-        self.mili_second = (buffer[3] << 8) + buffer[3]
+        self.mili_second = (buffer[3] << 8) + buffer[4]
         self.micro_second = (buffer[5] << 8) + buffer[6]

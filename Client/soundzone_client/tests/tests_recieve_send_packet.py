@@ -5,7 +5,7 @@ from soundzone_client import SoundZoneClient
 
 def test_receive_data_pack():
     szc = SoundZoneClient()
-    szc.manual_add_server("all")
+    szc.manual_add_server("")
     msg_rcv = szc.receive()
 
     szp = SZPApl()

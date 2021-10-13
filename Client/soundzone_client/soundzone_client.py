@@ -1,6 +1,6 @@
 
 from soundzone_protocol import SZPApl
-from data_transport import DataTransport, get_ip_from_name
+from data_transport import DataTransport
 
 
 class SoundZoneClient:
@@ -13,7 +13,7 @@ class SoundZoneClient:
 
     Methods
     -------
-    manual_add_server(name)
+    manual_add_server(hostname)
         Used to add a server manually.
     receive()
     """
@@ -21,16 +21,16 @@ class SoundZoneClient:
         # obj of szp
         self._server = None
 
-    def manual_add_server(self, name="master"):
+    def manual_add_server(self, hostname="master.local"):
         """
         Used to add a server manually.
 
         Here the servers hostname is needed.
-        :param name: hostname of server
+        :param hostname: hostname of server
         :return: None
         """
         if self._server is None:
-            self._server = DataTransport(get_ip_from_name(name))
+            self._server = DataTransport(hostname)
         else:
             raise Exception("Client Id is not empty!")
 
