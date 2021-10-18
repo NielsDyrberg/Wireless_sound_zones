@@ -38,7 +38,7 @@ class X01Send:
         :return: Encoded Bytearray
         """
         encoded_send = self.time.encode()
-        list_of_payload = [x.to_bytes(1, 'big') for x in self.payload]
+        list_of_payload = [x for x in self.payload]
         for byte in list_of_payload:
             encoded_send += byte
         return encoded_send

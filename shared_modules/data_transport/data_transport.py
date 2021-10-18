@@ -6,7 +6,7 @@ HEADER_SIZE = 2  # two bytes for header size
 ADDRESS_FAMILY = socket.AF_INET
 SOCK_TYPE = socket.SOCK_DGRAM  # UDP
 ENCODING = "utf-8"  # What encoding to use when encoding text
-BUFFER_LEN = 1028  # Length of rx buffer
+BUFFER_LEN = 4095  # Length of rx buffer
 
 
 class DataTransport:
@@ -144,7 +144,6 @@ class DataTransport:
                 # print(f"Receiving new payload with len: {payload_len}")  # Debug msg
 
             payload += tmp_payload
-            print("Here")
 
             if len(payload) - self._HEADER_SIZE == payload_len:
                 # print("Full msg received")  # Debug msg

@@ -6,12 +6,14 @@ from soundzone_client import SoundZoneClient
 def test_receive_data_pack():
     szc = SoundZoneClient()
     szc.manual_add_server("")
-    msg_rcv = szc.receive()
 
-    szp = SZPApl()
-    szp.decode(msg_rcv)
+    while 1:
+        msg_rcv = szc.receive()
 
-    print(szp.command.payload)
+        szp = SZPApl()
+        szp.decode(msg_rcv)
+
+        print(szp.command.payload)
 
 
 if __name__ == "__main__":
