@@ -29,7 +29,7 @@ class SoundZoneServer {
     + _server
 
     + __init__()
-    + manual_add_server(name)
+    + manual_add_server(hostname)
     + recieve()
 }
 
@@ -57,7 +57,7 @@ class DataTransport {
     - _open_port()
     - _close()
     - _connect()
-    + __init__(address, port, header_size, encoding, addr_family, socket_type, buffer_len)
+    + __init__(hostname, port, header_size, encoding, addr_family, socket_type, buffer_len)
     + receive()
     + send(msg)
 

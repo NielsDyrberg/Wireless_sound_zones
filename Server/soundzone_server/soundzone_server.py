@@ -1,6 +1,6 @@
 
 from soundzone_protocol import SZPApl
-from data_transport import DataTransport, get_ip_from_name
+from data_transport import DataTransport
 
 
 NUMBER_OF_CLIENTS = 8  # Max number of clients.
@@ -35,7 +35,7 @@ class SoundZoneServer:
         Adds a client who requests to be enrolled to list of clients.
         :return: None
         """
-        receive_client = DataTransport(get_ip_from_name("all"))
+        receive_client = DataTransport("")
         rcv_payload, client_ip = receive_client.receive(return_sender_addr=True)
 
         szp = SZPApl()
@@ -50,7 +50,7 @@ class SoundZoneServer:
         :return: None
         """
         if self.clients[client_id] is None:
-            self.clients[client_id] = DataTransport(get_ip_from_name(client_name))
+            self.clients[client_id] = DataTransport(client_name)
         else:
             raise Exception("Client Id is not empty!")
 

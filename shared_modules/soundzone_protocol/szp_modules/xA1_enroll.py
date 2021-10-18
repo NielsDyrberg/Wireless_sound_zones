@@ -26,15 +26,14 @@ class XA1Enroll:
     def encode(self):
         """
         Encodes the enroll package
-        :return: Encoded hex string
+        :return: Encoded Bytearray
         """
-        encoded_send = ""
-        encoded_send += "{:02X}".format(self.res)
+        encoded_send = self.res.to_bytes(1, 'big')
         return encoded_send
 
     def decode(self, buffer):
         """
-        Decodes a hex string containing data for a enroll package.
+        Decodes a Bytearray containing data for a enroll package.
         :param buffer: List of ints that should be decoded.
         :return: None
         """

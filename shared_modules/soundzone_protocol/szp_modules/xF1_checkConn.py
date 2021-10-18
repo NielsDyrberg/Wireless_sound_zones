@@ -27,7 +27,7 @@ class XF1CheckConn:
         Encodes an acknowledgment
         :return: "01"
         """
-        return "{:02X}".format(_ACK)  # Nothing to encode
+        return _ACK.to_bytes(1, 'big')
 
     def decode(self, buffer):
         """

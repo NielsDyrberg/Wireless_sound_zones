@@ -9,14 +9,14 @@ def test_send_packet():
     :return: None
     """
     client_id = 0  # Client id used for testing
-    hostname = "local"  # testing locally
+    hostname = "client1.local"  # testing locally
 
     szs = SoundZoneServer()
     szs.manual_add_client(client_id, hostname)
 
     szp = SZPApl()
     szp.add_command(command="send")
-    szp.command.payload = [0x4255, 0x5136, 0x1234, 0x5678, 0x1111]
+    szp.command.payload = [0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77]
     szp.command.time.hour = 0x4
     szp.command.time.minute = 0x01
     szp.command.time.second = 0x42

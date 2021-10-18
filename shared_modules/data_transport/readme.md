@@ -16,14 +16,14 @@ This section will give a few examples on how to use the class.
 
 ```Python
 hostname = "hostname_of_device_communicating"
-comm_socket = DataTransport(get_ip_from_name(hostname))  # Creates socket from where to communicate
+comm_socket = DataTransport(hostname)  # Creates socket from where to communicate
 ```
 
 ### Recieve
 
 ```Python
 hostname = "hostname_of_the_sender"
-receive_socket = DataTransport(get_ip_from_name(hostname))  # Creates socket to receive from
+receive_socket = DataTransport(hostname)  # Creates socket to receive from
 
 rcv_payload, client_ip = receive_socket.receive(return_sender_addr=True)  # Returns the recieved message (and client_ip if return_sender_addr is true)
 ```
@@ -32,9 +32,9 @@ rcv_payload, client_ip = receive_socket.receive(return_sender_addr=True)  # Retu
 
 ```python
 hostname = "hostname_of_the_reciever"
-send_socket = DataTransport(get_ip_from_name(hostname))
+send_socket = DataTransport(hostname)
 
-msg_to_send = '83'  # Some hex encoded string
+msg_to_send = b'\x83'  # Some hex encoded string
 send_socket.send(msg_to_send)
 ```
 
@@ -69,22 +69,15 @@ class DataTransport {
 
 class socket {
     + AF_INET
-    + SOCK_STREAM
     + SOCK_DGRAM
 
     + socket(family, type)
     + bind((address, port))
-    + listen(backlog)
-    + accept()
-    + recv(buffer_size: int)
+    + recvfrom(buffer_size: int)
     + send(msg: bytes)
     + connect()
     + close()
 }
-
-note right of socket::SOCK_STREAM
-    TCP
-end note
 
 note right of socket::SOCK_DGRAM
     UDP
