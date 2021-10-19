@@ -42,6 +42,7 @@ class SoundZoneServer:
         :param file_format: Format of file
         :return: None
         """
+        # Todo Finish this function
         resolution = file_format[0]
         sample_size = file_format[1]
 

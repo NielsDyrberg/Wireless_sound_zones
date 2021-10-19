@@ -9,7 +9,7 @@ def test_send_song():
     szs = SoundZoneServer()
     szs.manual_add_client(client_id, hostname)
 
-    szs.play_song(song_name="epic_sax_guy.wav", file_format="wav")
+    szs.play_song(song_name="epic_sax_guy", file_format="wav")
 
 
 if __name__ == "__main__":
