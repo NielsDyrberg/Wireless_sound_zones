@@ -32,3 +32,7 @@
 
 
 ![](photos/clion_deployment.png)
+
+
+## Debug as sudo (if needed)
+[Link](https://www.jetbrains.com/help/clion/debug-as-root.html#elevation)
