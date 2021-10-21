@@ -12,7 +12,7 @@
       3. The rest should automatically fill out (can take 2 min)
    5. Press "Apply"
 
-![](photos/add_toolchain.png)
+![](photos/add_toolchain.PNG)
 
 3. Setup CMake
    1. File -> Settings -> Build, Execution, Deployment -> CMake
@@ -23,7 +23,7 @@
       3. Toolchain - Select the toolchain you made before
    4. Press "Apply"
    
-![](photos/add_cmake.png)
+![](photos/add_cmake.PNG)
 
 4. Setup deployment
    1. Select the entry whit the name of the toolchain you made
@@ -31,7 +31,7 @@
    3. Configure Deployment path
 
 
-![](photos/clion_deployment.png)
+![](photos/clion_deployment.PNG)
 
 
 ## Debug as sudo (if needed)
