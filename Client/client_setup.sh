@@ -9,7 +9,7 @@ sudo apt-get -y upgrade
 
 
 # Add new packages to install in the list below
-sudo apt -y install python3-pip 
+sudo apt -y install python3-pip libasound2-dev
 
 # Install python packages
 sudo pip3 install virtualenv
