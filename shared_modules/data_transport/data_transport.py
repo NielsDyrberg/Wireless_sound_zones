@@ -53,7 +53,7 @@ class DataTransport:
     send(msg)
         Sends a msg to #_s socket specified by #_ADDR
     """
-    def __init__(self, hostname, port=PORT, header_size=HEADER_SIZE, encoding=ENCODING, addr_family=ADDRESS_FAMILY,
+    def __init__(self, hostname, addr=None, port=PORT, header_size=HEADER_SIZE, encoding=ENCODING, addr_family=ADDRESS_FAMILY,
                  socket_type=SOCK_TYPE, buffer_len=BUFFER_LEN):
         """
         Initiates the class parameters
@@ -66,7 +66,10 @@ class DataTransport:
         :param buffer_len: The length of the rx buffer
         """
         self.buffer_len = buffer_len
-        self._ADDR = socket.gethostbyname(hostname)
+        if addr is None:
+            self._ADDR = socket.gethostbyname(hostname)
+        else:
+            self._ADDR = addr
         self._PORT = port
         self._HEADER_SIZE = header_size
         self._ENCODING = encoding
