@@ -5,6 +5,5 @@
 *.DS_Store
 **/cmake-build*/*
 **/deps/*
-**/tests/*
 !/c_shared_modules/deps/*
 !/c_shared_modules/tests/*
