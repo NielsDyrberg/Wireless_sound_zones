@@ -6,11 +6,12 @@
 #include "asoundlib.h"
 #include "alsadriver.h"
 #include <iostream>
-#include <thread>
-#include <string.h>
+
 
 using namespace std;
-#define ALSA_PCM_NEW_HW_PARAMS_API
+
+
+
 
 void alsadriver::CharToFormat(const char* bitformat) {
 
@@ -28,16 +29,15 @@ void alsadriver::CharToFormat(const char* bitformat) {
 }
 
 
-
-int alsadriver::startstreaming(unsigned int sampling_rate, int channels, const char* bitformat) {
+void alsadriver::startstreaming(unsigned int sampling_rate, int channels, const char* bitformat) {
 
     bool debug = true;
     int rc, dir;
     unsigned int val;
-    char *buffer = NULL;
+    char *buffer = nullptr;
     int buff_size;
     int readfd, readval = 0;
-    const char* readbuffer = "/home/pi/download/MYFIFO"; //"/home/pi/download/epic_sax_guy.raw";
+    const char* readbuffer = "/home/pi/download/firkant_100hz_mono_4k.raw"; //"/home/pi/download/epic_sax_guy.raw";
     CharToFormat(bitformat);
 
     /* Open PCM device for playback. */
@@ -59,21 +59,22 @@ int alsadriver::startstreaming(unsigned int sampling_rate, int channels, const c
 
     /* Interleaved mode */
     snd_pcm_hw_params_set_access(handle, params,SND_PCM_ACCESS_RW_INTERLEAVED);
+
     /* Set format  */
     snd_pcm_hw_params_set_format(handle, params, format);
 
     /* Set period size to 32 frames. */
-    //frames = 32;
-    //snd_pcm_hw_params_set_period_size_near(handle, params, &frames, &dir);
+    frames = 350; // 350 lavest den kan gå
+    snd_pcm_hw_params_set_period_size_near(handle, params, &frames, &dir);
 
 
 
-    /* Two channels (stereo) */
+    /* Set number of channels */
     snd_pcm_hw_params_set_channels(handle, params, channels);
 
 
 
-    /* 44100 bits/second sampling rate (CD quality) */
+    /* Set the sampling rate */
     snd_pcm_hw_params_set_rate_near(handle, params, &sampling_rate, &dir);
 
 
@@ -120,28 +121,37 @@ int alsadriver::startstreaming(unsigned int sampling_rate, int channels, const c
                snd_pcm_format_description(
                        (snd_pcm_format_t) val));
 
+        printf("frames: %d\n", (int)frames);
+
+        snd_pcm_hw_params_get_period_time(params, &val, NULL);
+        printf("period time: %i ", val);
+
+
     }
 
-    while(readval = read(readfd, buffer, buff_size) > 0) {
-        if (val = snd_pcm_writei(handle, buffer, frames) == -EPIPE) {
-            fprintf(stderr, "Underrun!\n");
-            snd_pcm_prepare(handle);
-        } else if (val < 0) {
-            fprintf(stderr, "Error writing to PCM device: %s\n", snd_strerror(val));
+    while (true) {
+        while (run_on) {
+            while ((readval = read(readfd, buffer, buff_size) > 0)) {
+                if ((val = snd_pcm_writei(handle, buffer, frames) == -EPIPE)) {
+                    fprintf(stderr, "Underrun!\n");
+                    snd_pcm_prepare(handle);
+                } else if (val < 0) {
+                    fprintf(stderr, "Error writing to PCM device: %s\n", snd_strerror(val));
+                }
+            }
         }
     }
-
     snd_pcm_drain(handle);
     snd_pcm_close(handle);
     free(buffer);
 
-    return 1;
+
 
 }
 
-void alsadriver::dropplayer(){
-    snd_pcm_drop(handle);
-    snd_pcm_close(handle);
+void alsadriver::pause_play(int hw_pause) {
+    printf("Can it pause? :", snd_pcm_hw_params_can_pause(params));
+    snd_pcm_pause(handle, hw_pause);
 
 }
 
@@ -152,16 +162,12 @@ void alsadriver::checksetup(){
 
     /* Display information about the PCM interface */
 
-    printf("PCM handle name = '%s'\n",
-           snd_pcm_name(handle));
+    printf("PCM handle name = '%s'\n", snd_pcm_name(handle));
 
-    printf("PCM state = %s\n",
-           snd_pcm_state_name(snd_pcm_state(handle)));
+    printf("PCM state = %s\n", snd_pcm_state_name(snd_pcm_state(handle)));
 
-    snd_pcm_hw_params_get_access(params,
-                                (snd_pcm_access_t *) &val);
-    printf("access type = %s\n",
-           snd_pcm_access_name((snd_pcm_access_t) val));
+    snd_pcm_hw_params_get_access(params, (snd_pcm_access_t *) &val);
+    printf("access type = %s\n", snd_pcm_access_name((snd_pcm_access_t) val));
 
     snd_pcm_hw_params_get_format(params, reinterpret_cast<snd_pcm_format_t *>(&val));
     printf("format = '%s' (%s)\n",
@@ -183,34 +189,28 @@ void alsadriver::checksetup(){
     snd_pcm_hw_params_get_rate(params, &val, &dir);
     printf("rate = %d bps\n", val);
 
-    snd_pcm_hw_params_get_period_time(params,
-                                      &val, &dir);
+    snd_pcm_hw_params_get_period_time(params, &val, &dir);
     printf("period time = %d us\n", val);
 
-    snd_pcm_hw_params_get_period_size(params,
-                                      &frames, &dir);
+    snd_pcm_hw_params_get_period_size(params, &frames, &dir);
     printf("period size = %d frames\n", (int) frames);
 
-    snd_pcm_hw_params_get_buffer_time(params,
-                                      &val, &dir);
+    snd_pcm_hw_params_get_buffer_time(params, &val, &dir);
     printf("buffer time = %d us\n", val);
 
-    snd_pcm_hw_params_get_buffer_size(params,
-                                      (snd_pcm_uframes_t *) &val);
+    snd_pcm_hw_params_get_buffer_size(params, (snd_pcm_uframes_t *) &val);
     printf("buffer size = %d frames\n", val);
 
     snd_pcm_hw_params_get_periods(params, &val, &dir);
     printf("periods per buffer = %d frames\n", val);
 
-    snd_pcm_hw_params_get_rate_numden(params,
-                                      &val, &val2);
+    snd_pcm_hw_params_get_rate_numden(params, &val, &val2);
     printf("exact rate = %d/%d bps\n", val, val2);
 
     val = snd_pcm_hw_params_get_sbits(params);
     printf("significant bits = %d\n", val);
 
-    snd_pcm_hw_params_get_tick_time(params,
-                                    &val, &dir);
+    snd_pcm_hw_params_get_tick_time(params, &val, &dir);
     printf("tick time = %d us\n", val);
 
     val = snd_pcm_hw_params_is_batch(params);
@@ -244,6 +244,8 @@ void alsadriver::checksetup(){
     printf("can sync start = %d\n", val);
 }
 
+/*
+
 int alsadriver::SetVolume(int volume)
 {
     long min, max;
@@ -271,8 +273,4 @@ int alsadriver::SetVolume(int volume)
     return 1;
 
 }
-
-void alsadriver::pauseplay(int state){
-   // snd_pcm_pause(handle, state);
-
-}
+*/

@@ -1,0 +1,37 @@
+Delay i microsekunder (sudo nice -n -20 ./test_dac_project)
+
+Buffer ukendt
+
+	Første metode
+
+		Dio 6 757
+		Dio 6 580
+		Dio 6 406
+		Dio 6 120
+		Dio 6 800
+
+
+	Delay efter reinstall
+
+		D5 82
+		D5 264
+		D6 11
+		D6 20
+		D5 3700
+		D6 200
+
+	Delay ny call metode
+
+		D5 20
+		D6 22
+		D6 14
+		D6 6
+		D6 17
+		
+Buffer 349
+	
+	D6 4
+	D5 3
+	D5 3
+	D6 4.5
+	D5 5.4
