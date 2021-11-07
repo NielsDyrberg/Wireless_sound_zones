@@ -16,7 +16,7 @@ alsadriver * dacdriver = new alsadriver; // Vigtigt at der laves en pointer til 
 int main() {
     bool firstrun = false;
     /* Starts a thread of alsadriver.startstreaming. Must have variables declared when called */
-    thread t (&alsadriver::startstreaming, dacdriver, 2000, 1, "SND_PCM_FORMAT_S16_LE");
+    thread t (&alsadriver::startstreaming, dacdriver, 4000, 1, "SND_PCM_FORMAT_S16_LE");
     if (!bcm2835_init())return 1;
     { /* Initialize */
         bcm2835_gpio_fsel(INPUT_PIN, BCM2835_GPIO_FSEL_INPT); // Set INPUT_PIN to be an input

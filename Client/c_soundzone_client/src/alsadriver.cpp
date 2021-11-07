@@ -37,7 +37,7 @@ void alsadriver::startstreaming(unsigned int sampling_rate, int channels, const 
     char *buffer = nullptr;
     int buff_size;
     int readfd, readval = 0;
-    const char* readbuffer = "/home/pi/download/firkant_100hz_mono_4k.raw"; //"/home/pi/download/epic_sax_guy.raw";
+    const char* readbuffer = "/home/pi/download/firkant_20hz_mono_4k_10min.raw"; //"/home/pi/download/epic_sax_guy.raw";
     CharToFormat(bitformat);
 
     /* Open PCM device for playback. */

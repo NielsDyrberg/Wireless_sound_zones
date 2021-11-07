@@ -42,7 +42,7 @@ void fillsarray() {
 
 int main(){
 
-    for (int i = 0; i <= 1000; i++) {
+    for (int i = 0; i <= 100; i++) {
         std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
         for (int j = 0; j <= 100; j++) {
             fillsarray();
@@ -51,18 +51,3 @@ int main(){
         cout << "\n " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
     }
 }
-
-
-/* Tid i microsekunder
- Tid 161323
- Tid 122895
- Tid 121600
- Tid 122888
- Tid 123045
- Tid 122993
- Tid 121599
- Tid 123052
- Tid 126287
- Tid 125733
- Tid 121594
-*/
