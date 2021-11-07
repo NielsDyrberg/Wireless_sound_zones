@@ -8,17 +8,19 @@ sudo apt-get update
 sudo apt-get -y upgrade
 
 # Add new packages to install in the list below
-sudo apt-get -y install libasound2 libasound2-dev git 
+sudo apt-get -y install libasound2 libasound2-dev 
 
 # Download files
 
-wget https://filetransfer.io/data-package/GneaNi2S/download
+wget https://github.com/NielsDyrberg/Wireless_sound_zones/raw/DacDriver_v1.0/Measurement_Report/General_Timing/General_Timing.zip
 
-unzip download
+unzip General_Timing
 
-cd General\ Timing/
+cd General_Timing/
 
-
+sudo chmod u+x ./Drift\ af\ DAC\ modul/test_dac_jitter
+sudo chmod u+x ./Drift\ af\ tidstagning\ chrono/chronotest_10sek
+sudo chmod u+x ./Tidstagning\ af\ funktion\ Python\ og\ C/randomwrite
 
 # Install BCM2835 library
 
