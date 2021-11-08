@@ -48,7 +48,7 @@ int main() {
 			while (sleep) {
 			slut = std::chrono::high_resolution_clock::now();
 			resul = std::chrono::duration_cast<std::chrono::microseconds>(slut - start);
-			if (resul.count() > 5000000)
+			if (resul.count() > 500000)
 			sleep = false;
 			}
 			toggle = !toggle;
