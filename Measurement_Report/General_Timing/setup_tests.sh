@@ -8,7 +8,7 @@ sudo apt-get update
 sudo apt-get -y upgrade
 
 # Add new packages to install in the list below
-sudo apt-get -y install libasound2 libasound2-dev git
+sudo apt-get -y install libasound2 libasound2-dev git util-linux
 
 # Download files
 

@@ -26,7 +26,7 @@ void startstreaming(unsigned int sampling_rate, int channels, const char* bitfor
     char *buffer = nullptr;
     int buff_size;
     int readfd, readval = 0;
-    const char* readbuffer = "firkant_100hz_mono_4k.raw"; //"/home/pi/download/epic_sax_guy.raw";
+    const char* readbuffer = "firkant_100hz_mono_4k_5min.raw"; //"/home/pi/download/epic_sax_guy.raw";
 //    CharToFormat(bitformat);
 format = SND_PCM_FORMAT_S16_LE;
 
@@ -156,7 +156,6 @@ int main() {
         while (bcm2835_gpio_lev(INPUT_PIN)) {
             if (!firstrun) {
                 run_on = true;
-
                 firstrun = true;
             }
         }

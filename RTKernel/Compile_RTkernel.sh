@@ -5,7 +5,7 @@
 ############################################################################
 
 # Add new packages to install in the list below
-sudo apt install git bc bison flex libssl-dev make libncurses5-dev
+sudo apt -y install git bc bison flex libssl-dev make libncurses5-dev
 
 # Download files and apply patch
 
