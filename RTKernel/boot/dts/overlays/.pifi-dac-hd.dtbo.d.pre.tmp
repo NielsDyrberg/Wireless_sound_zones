@@ -1,0 +1,1 @@
+pifi-dac-hd-overlay.o: arch/arm/boot/dts/overlays/pifi-dac-hd-overlay.dts

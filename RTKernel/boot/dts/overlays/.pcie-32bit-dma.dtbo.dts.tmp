@@ -1,0 +1,22 @@
+# 1 "arch/arm/boot/dts/overlays/pcie-32bit-dma-overlay.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "arch/arm/boot/dts/overlays/pcie-32bit-dma-overlay.dts"
+
+
+
+
+/dts-v1/;
+/plugin/;
+
+/ {
+ compatible = "brcm,bcm2711";
+
+ fragment@0 {
+  target-path = "/aliases";
+  __overlay__ {
+   pcie0 = "";
+  };
+ };
+
+};

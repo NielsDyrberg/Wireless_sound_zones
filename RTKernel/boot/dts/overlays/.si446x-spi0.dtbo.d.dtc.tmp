@@ -1,0 +1,1 @@
+arch/arm/boot/dts/overlays/si446x-spi0.dtbo: arch/arm/boot/dts/overlays/.si446x-spi0.dtbo.dts.tmp

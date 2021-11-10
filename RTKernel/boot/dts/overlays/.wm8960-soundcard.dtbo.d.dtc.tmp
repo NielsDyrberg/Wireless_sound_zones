@@ -1,0 +1,1 @@
+arch/arm/boot/dts/overlays/wm8960-soundcard.dtbo: arch/arm/boot/dts/overlays/.wm8960-soundcard.dtbo.dts.tmp

@@ -1,0 +1,1 @@
+minipitft13-overlay.o: arch/arm/boot/dts/overlays/minipitft13-overlay.dts

@@ -1,0 +1,2 @@
+imx477-overlay.o: arch/arm/boot/dts/overlays/imx477-overlay.dts \
+ arch/arm/boot/dts/overlays/imx477_378-overlay.dtsi

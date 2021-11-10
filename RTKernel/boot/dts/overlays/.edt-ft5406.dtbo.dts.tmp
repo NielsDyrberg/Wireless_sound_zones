@@ -1,0 +1,70 @@
+# 1 "arch/arm/boot/dts/overlays/edt-ft5406-overlay.dts"
+# 1 "<built-in>"
+# 1 "<command-line>"
+# 1 "arch/arm/boot/dts/overlays/edt-ft5406-overlay.dts"
+
+
+
+
+
+
+/dts-v1/;
+/plugin/;
+
+# 1 "arch/arm/boot/dts/overlays/edt-ft5406.dtsi" 1
+
+
+
+
+
+
+
+/ {
+ compatible = "brcm,bcm2835";
+
+ fragment@10 {
+  target = <&ft5406>;
+  __overlay__ {
+   touchscreen-inverted-x;
+  };
+ };
+
+ fragment@11 {
+  target = <&ft5406>;
+  __overlay__ {
+   touchscreen-inverted-y;
+  };
+ };
+
+ fragment@12 {
+  target = <&i2c_csi_dsi>;
+  __overlay__ {
+   #address-cells = <1>;
+   #size-cells = <0>;
+   status = "okay";
+   ft5406: ts@38 {
+    compatible = "edt,edt-ft5406";
+    reg = <0x38>;
+
+    touchscreen-size-x = < 800 >;
+    touchscreen-size-y = < 480 >;
+   };
+  };
+ };
+
+ fragment@13 {
+  target = <&i2c0if>;
+  __overlay__ {
+   status = "okay";
+  };
+ };
+
+ __overrides__ {
+  sizex = <&ft5406>,"touchscreen-size-x:0";
+  sizey = <&ft5406>,"touchscreen-size-y:0";
+  invx = <0>, "-10";
+  invy = <0>, "-11";
+  swapxy = <&ft5406>,"touchscreen-swapped-x-y?";
+ };
+};
+# 11 "arch/arm/boot/dts/overlays/edt-ft5406-overlay.dts" 2

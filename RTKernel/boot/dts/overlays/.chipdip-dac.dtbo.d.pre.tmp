@@ -1,0 +1,1 @@
+chipdip-dac-overlay.o: arch/arm/boot/dts/overlays/chipdip-dac-overlay.dts

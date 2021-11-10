@@ -1,0 +1,1 @@
+arch/arm/boot/dts/overlays/qca7000-uart0.dtbo: arch/arm/boot/dts/overlays/.qca7000-uart0.dtbo.dts.tmp

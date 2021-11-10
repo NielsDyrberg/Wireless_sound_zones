@@ -1,0 +1,1 @@
+arch/arm/boot/dts/overlays/mlx90640.dtbo: arch/arm/boot/dts/overlays/.mlx90640.dtbo.dts.tmp

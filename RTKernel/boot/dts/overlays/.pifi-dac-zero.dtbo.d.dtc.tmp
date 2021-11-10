@@ -1,0 +1,1 @@
+arch/arm/boot/dts/overlays/pifi-dac-zero.dtbo: arch/arm/boot/dts/overlays/.pifi-dac-zero.dtbo.dts.tmp

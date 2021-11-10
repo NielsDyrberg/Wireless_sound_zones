@@ -1,0 +1,1 @@
+arch/arm/boot/dts/overlays/adafruit-st7735r.dtbo: arch/arm/boot/dts/overlays/.adafruit-st7735r.dtbo.dts.tmp

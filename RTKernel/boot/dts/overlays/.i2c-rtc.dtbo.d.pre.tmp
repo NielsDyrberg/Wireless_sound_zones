@@ -1,0 +1,2 @@
+i2c-rtc-overlay.o: arch/arm/boot/dts/overlays/i2c-rtc-overlay.dts \
+ arch/arm/boot/dts/overlays/i2c-rtc-common.dtsi
