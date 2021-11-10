@@ -1,1 +1,0 @@
-si446x-spi0-overlay.o: arch/arm/boot/dts/overlays/si446x-spi0-overlay.dts

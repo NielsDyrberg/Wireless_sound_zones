@@ -1,2 +1,0 @@
-miniuart-bt-overlay.o: arch/arm/boot/dts/overlays/miniuart-bt-overlay.dts \
- scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h

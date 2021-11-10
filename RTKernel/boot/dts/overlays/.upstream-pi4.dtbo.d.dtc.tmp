@@ -1,1 +1,0 @@
-arch/arm/boot/dts/overlays/upstream-pi4.dtbo: arch/arm/boot/dts/overlays/.upstream-pi4.dtbo.dts.tmp

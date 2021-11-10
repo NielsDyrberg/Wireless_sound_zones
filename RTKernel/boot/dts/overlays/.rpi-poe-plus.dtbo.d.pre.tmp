@@ -1,3 +1,0 @@
-rpi-poe-plus-overlay.o: \
- arch/arm/boot/dts/overlays/rpi-poe-plus-overlay.dts \
- arch/arm/boot/dts/overlays/rpi-poe-overlay.dts

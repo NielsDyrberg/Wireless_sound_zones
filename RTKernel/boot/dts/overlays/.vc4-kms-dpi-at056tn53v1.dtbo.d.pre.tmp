@@ -1,4 +1,0 @@
-vc4-kms-dpi-at056tn53v1-overlay.o: \
- arch/arm/boot/dts/overlays/vc4-kms-dpi-at056tn53v1-overlay.dts \
- scripts/dtc/include-prefixes/dt-bindings/gpio/gpio.h \
- scripts/dtc/include-prefixes/dt-bindings/pinctrl/bcm2835.h

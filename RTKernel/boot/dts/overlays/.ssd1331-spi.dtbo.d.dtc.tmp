@@ -1,1 +1,0 @@
-arch/arm/boot/dts/overlays/ssd1331-spi.dtbo: arch/arm/boot/dts/overlays/.ssd1331-spi.dtbo.dts.tmp

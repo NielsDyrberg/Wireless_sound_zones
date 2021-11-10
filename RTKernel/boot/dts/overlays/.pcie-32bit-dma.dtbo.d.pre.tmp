@@ -1,2 +1,0 @@
-pcie-32bit-dma-overlay.o: \
- arch/arm/boot/dts/overlays/pcie-32bit-dma-overlay.dts
