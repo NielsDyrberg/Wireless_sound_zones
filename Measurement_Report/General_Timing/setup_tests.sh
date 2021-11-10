@@ -8,7 +8,7 @@ sudo apt-get update
 sudo apt-get -y upgrade
 
 # Add new packages to install in the list below
-sudo apt-get -y install libasound2 libasound2-dev 
+sudo apt-get -y install libasound2 libasound2-dev git
 
 # Download files
 
@@ -37,7 +37,7 @@ sudo rm -rf bcm2835-1.70
 
 # Setup DAC module
 
-sudo mv -f ./config.txt /boot/
+sudo mv -f config.txt /boot/
 sync
 
 
