@@ -91,7 +91,6 @@ If you do not wish to run the install as root, simply run `sudo rfkill unblock 0
 together {
     package soundzone_client{
         class SZS_client{}
-        class alsadriver{}
     }
 
     package soundzone_server {
@@ -100,6 +99,10 @@ together {
 }
 
 together {
+    package alsadriver {
+        class alsadriver{}
+    }
+
     package SZP {
         SZP_master --o sound_zone_protocol
         SZP_slave --o sound_zone_protocol
@@ -115,7 +118,6 @@ together {
     package DataTransport{
         UDP_server --o DataTransport
         UDP_client --o DataTransport
-
     }
 }
 
@@ -123,7 +125,7 @@ SZS_client --* SZP_slave
 SZS_server --* SZP_master
 SZS_client --* Sync_Slave
 SZS_server --* Sync_Master
-SZS_client -right-* alsadriver
+SZS_client --* alsadriver
 SZP_master --* UDP_client
 SZP_slave --* UDP_server
 Sync_Slave --* TimeKeeper
