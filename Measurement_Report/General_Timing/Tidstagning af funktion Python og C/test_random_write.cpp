@@ -42,12 +42,13 @@ void fillsarray() {
 
 int main(){
 
-    for (int i = 0; i <= 100; i++) {
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        for (int j = 0; j <= 100; j++) {
+    for (int i = 0; i <= 1000; i++) { 
+	auto starttime = std::chrono::steady_clock::now();
+	for (int j = 0; j <= 100; j++) {
             fillsarray();
         }
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        cout << "\n " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+	auto endtime = std::chrono::steady_clock::now();
+	auto diff = std::chrono::duration_cast<std::chrono::microseconds>(endtime-starttime);
+	cout << "\n " << diff.count();
     }
 }
