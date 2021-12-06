@@ -1,6 +1,6 @@
 <!-- 
 To compile puml use: (Assuming plantuml you are in the directory)
-plantuml.jar -tsvg readme.md -o diagrams
+plantuml.jar -tsvg README.md -o diagrams
 -->
 
 # Wireless Sound Zones
@@ -33,6 +33,82 @@ It´s important to run the setup files login as root, or else you need to manual
 	./Wireless_sound_zones/Server/server_setup.sh
 	
 If you do not wish to run the install as root, simply run `sudo rfkill unblock 0` after install. For some reason it cannot run this inside a shell script
+
+## Gathered uml diagram
+
+<!--
+```
+@startuml class_diagram
+
+together {
+    package soundzone_client{
+        class SZS_client{}
+        class alsadriver{}
+    }
+
+    package soundzone_server {
+        class SZS_server{}
+    }
+}
+
+together {
+    package SZP {
+        SZP_master --o sound_zone_protocol
+        SZP_slave --o sound_zone_protocol
+
+        package sound_zone_protocol {
+            class sound_zone_protocol {}
+        }
+    }
+
+    package szs_time_sync {
+        class Sync_Slave {}
+        class Sync_Master {}
+        class TimeKeeper {}
+    }
+
+    package DataTransport{
+        UDP_server --o DataTransport
+        UDP_client --o DataTransport
+
+    }
+
+    package Socket{
+        DataTransport -right-* socket
+    }
+}
+
+SZS_client --* SZP_slave
+SZS_server --* SZP_master
+SZS_client --* Sync_Slave
+SZS_server --* Sync_Master
+SZS_client -right-* alsadriver
+SZP_master --* UDP_client
+SZP_slave --* UDP_server
+Sync_Slave --* TimeKeeper
+Sync_Master --* TimeKeeper
+Sync_Slave --* UDP_server
+Sync_Master --* UDP_client
+
+
+class UDP_server {}
+
+class UDP_client {}
+
+class DataTransport {}
+
+class socket {}
+
+class SZP_master{}
+
+class SZP_slave{}
+
+@enduml
+```
+-->
+
+![](diagrams/class_diagram.svg)
+
 
 ## Sequence diagram over general use
 
