@@ -89,10 +89,6 @@ If you do not wish to run the install as root, simply run `sudo rfkill unblock 0
 @startuml class_diagram
 
 together {
-    package alsa #DDDDDD {
-        class alsalib {}
-    }
-
     package soundzone_client{
         class SZS_client{}
         class alsadriver{}
@@ -103,13 +99,7 @@ together {
     }
 }
 
-alsadriver -right-* alsalib
-
 together {
-    package chrono #DDDDDD {
-        class chrono {}
-    }
-
     package SZP {
         SZP_master --o sound_zone_protocol
         SZP_slave --o sound_zone_protocol
@@ -127,10 +117,6 @@ together {
         UDP_client --o DataTransport
 
     }
-
-    package Socket #DDDDDD {
-        DataTransport -down-* socket
-    }
 }
 
 SZS_client --* SZP_slave
@@ -144,7 +130,6 @@ Sync_Slave --* TimeKeeper
 Sync_Master --* TimeKeeper
 Sync_Slave --* UDP_server
 Sync_Master --* UDP_client
-TimeKeeper -down-* chrono
 
 
 class UDP_server {}
@@ -152,8 +137,6 @@ class UDP_server {}
 class UDP_client {}
 
 class DataTransport {}
-
-class socket {}
 
 class SZP_master{}
 
