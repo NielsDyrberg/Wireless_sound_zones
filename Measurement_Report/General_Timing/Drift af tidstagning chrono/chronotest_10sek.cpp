@@ -6,6 +6,7 @@
 
 
 
+
 #define OUTPUT_PIN RPI_V2_GPIO_P1_40 // Define output pin
 #define INPUT_PIN RPI_V2_GPIO_P1_37 // Define Input pin
 
@@ -30,8 +31,8 @@ int main() {
 
 	int ticksNow = 0;
 	bool sleep = false;
-	auto start = std::chrono::system_clock::now();
-	auto slut = std::chrono::system_clock::now();
+	auto start = std::chrono::steady_clock::now();
+	auto slut = std::chrono::steady_clock::now();
 	int timesrun = 0;
 	bool toggle = false;
 
@@ -44,11 +45,11 @@ int main() {
 			//timesrun++;
 			// std::cout << "Pin lav" << std::endl;
 			sleep = true;
-			start = std::chrono::high_resolution_clock::now();
+			start = std::chrono::steady_clock::now();
 			while (sleep) {
-			slut = std::chrono::high_resolution_clock::now();
+			slut = std::chrono::steady_clock::now();
 			resul = std::chrono::duration_cast<std::chrono::microseconds>(slut - start);
-			if (resul.count() > 500000)
+			if (resul.count() > 5000000)
 			sleep = false;
 			}
 			toggle = !toggle;
