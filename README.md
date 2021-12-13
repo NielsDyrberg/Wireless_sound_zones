@@ -103,13 +103,14 @@ together {
         class alsadriver{}
     }
 
-    package SZP {
-        SZP_master --o sound_zone_protocol
-        SZP_slave --o sound_zone_protocol
-        class sound_zone_protocol {}
+    package soundzone_protocol {
+        class SZP_master{}
+        class SZP_slave{}
+
+        package szp {}
     }
 
-    package szs_time_sync {
+    package time_sync {
         class Sync_Slave {}
         class Sync_Master {}
         class TimeKeeper {}
@@ -120,6 +121,9 @@ together {
         UDP_client --o DataTransport
     }
 }
+
+SZP_master --o szp
+SZP_slave --o szp
 
 SZS_client --* SZP_slave
 SZS_server --* SZP_master
@@ -139,10 +143,6 @@ class UDP_server {}
 class UDP_client {}
 
 class DataTransport {}
-
-class SZP_master{}
-
-class SZP_slave{}
 
 @enduml
 ```
