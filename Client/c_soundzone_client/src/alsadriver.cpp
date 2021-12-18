@@ -6,13 +6,15 @@
 #include "asoundlib.h"
 #include "alsadriver.h"
 #include <iostream>
-#include <string.h>
 
-#define ALSA_PCM_NEW_HW_PARAMS_API
 
 using namespace std;
 
+
+
+
 void alsadriver::CharToFormat(const char* bitformat) {
+
     if (strcmp (bitformat, "SND_PCM_FORMAT_S16_LE") == 0) /** Signed 16 bit Little Endian */
         format = SND_PCM_FORMAT_S16_LE;
     else if (strcmp (bitformat, "SND_PCM_FORMAT_S16_BE") == 0) /** Signed 16 bit Big Endian */
@@ -27,17 +29,19 @@ void alsadriver::CharToFormat(const char* bitformat) {
 }
 
 
+void alsadriver::startstreaming(unsigned int sampling_rate, int channels, const char* bitformat) {
 
-int alsadriver::startstreaming(unsigned int sampling_rate, int channels, const char* bitformat ) {
-
+    bool debug = true;
+    int rc, dir;
+    unsigned int val;
+    char *buffer = nullptr;
+    int buff_size;
+    int readfd, readval = 0;
+    const char* readbuffer = "/home/pi/download/firkant_20hz_mono_4k_10min.raw"; //"/home/pi/download/epic_sax_guy.raw";
     CharToFormat(bitformat);
-    char *buffer;
-    long loops;
-    int size;
 
     /* Open PCM device for playback. */
-    rc = snd_pcm_open(&handle, "default",
-                      SND_PCM_STREAM_PLAYBACK, 0);
+    rc = snd_pcm_open(&handle, "default",SND_PCM_STREAM_PLAYBACK, 0);
     if (rc < 0) {
         fprintf(stderr,
                 "unable to open pcm device: %s\n",
@@ -54,27 +58,24 @@ int alsadriver::startstreaming(unsigned int sampling_rate, int channels, const c
     /* Set the desired hardware parameters. */
 
     /* Interleaved mode */
-    snd_pcm_hw_params_set_access(handle, params,
-                                 SND_PCM_ACCESS_RW_INTERLEAVED);
+    snd_pcm_hw_params_set_access(handle, params,SND_PCM_ACCESS_RW_INTERLEAVED);
+
     /* Set format  */
-    snd_pcm_hw_params_set_format(handle, params,
-                                 format);
+    snd_pcm_hw_params_set_format(handle, params, format);
 
     /* Set period size to 32 frames. */
-    frames = 32;
-    snd_pcm_hw_params_set_period_size_near(handle,
-                                           params, &frames, &dir);
+    frames = 350; // 350 lavest den kan gå
+    snd_pcm_hw_params_set_period_size_near(handle, params, &frames, &dir);
 
 
 
-    /* Two channels (stereo) */
+    /* Set number of channels */
     snd_pcm_hw_params_set_channels(handle, params, channels);
 
 
 
-    /* 44100 bits/second sampling rate (CD quality) */
-    snd_pcm_hw_params_set_rate_near(handle, params,
-                                    &sampling_rate, &dir);
+    /* Set the sampling rate */
+    snd_pcm_hw_params_set_rate_near(handle, params, &sampling_rate, &dir);
 
 
     /* Write the parameters to the driver */
@@ -85,72 +86,88 @@ int alsadriver::startstreaming(unsigned int sampling_rate, int channels, const c
                 snd_strerror(rc));
         exit(1);
     }
-    /* Use a buffer large enough to hold one period */
-    snd_pcm_hw_params_get_period_size(params, &frames,
-                                      &dir);
-    size = frames * 4; /* 2 bytes/sample, 2 channels */
-    buffer = (char *) malloc(size);
 
-    /* We want to loop for 5 seconds */
-    snd_pcm_hw_params_get_period_time(params,
-                                      &val, &dir);
-    /* 5 seconds in microseconds divided by
-     * period time */
-    loops = 5000000 / val;
+    /* Allocate buffer to hold single period */
+    snd_pcm_hw_params_get_period_size(params, &frames, 0);
+   // printf("frames: %d\n", (int)frames);
 
-    while (loops > 0) {
-        loops--;
-        rc = read(0, buffer, size);
-        if (rc == 0) {
-            fprintf(stderr, "end of file on input\n");
-            break;
-        } else if (rc != size) {
-            fprintf(stderr,
-                    "short read: read %d bytes\n", rc);
-        }
-        rc = snd_pcm_writei(handle, buffer, frames);
-        if (rc == -EPIPE) {
-            /* EPIPE means underrun */
-            fprintf(stderr, "underrun occurred\n");
-            snd_pcm_prepare(handle);
-        } else if (rc < 0) {
-            fprintf(stderr,
-                    "error from writei: %s\n",
-                    snd_strerror(rc));
-        } else if (rc != (int) frames) {
-            fprintf(stderr,
-                    "short write, write %d frames\n", rc);
-        }
+    buff_size = frames * channels * 2 /* 2 -> sample size */;
+    buffer = (char *) malloc(buff_size);
+    memset(buffer, 0, buff_size);
+
+
+    readfd = open(readbuffer, O_RDONLY);
+    if (readfd < 0) {
+        printf("Error reading file");
+        exit(1);
     }
 
+    if (debug == 1) {
+
+
+        printf("PCM name: '%s'\n", snd_pcm_name(handle));
+
+        printf("PCM state: %s\n",  snd_pcm_state_name(snd_pcm_state(handle)));
+
+        snd_pcm_hw_params_get_rate(params, &val, 0);
+        printf("rate: %d bps\n", val);
+
+        snd_pcm_hw_params_get_channels(params, &val);
+        printf("channels: %i ", val);
+
+        snd_pcm_hw_params_get_format(params, reinterpret_cast<snd_pcm_format_t *>(&val));
+        printf("format = '%s' (%s)\n",
+               snd_pcm_format_name((snd_pcm_format_t) val),
+               snd_pcm_format_description(
+                       (snd_pcm_format_t) val));
+
+        printf("frames: %d\n", (int)frames);
+
+        snd_pcm_hw_params_get_period_time(params, &val, NULL);
+        printf("period time: %i ", val);
+
+
+    }
+
+    while (true) {
+        while (run_on) {
+            while ((readval = read(readfd, buffer, buff_size) > 0)) {
+                if ((val = snd_pcm_writei(handle, buffer, frames) == -EPIPE)) {
+                    fprintf(stderr, "Underrun!\n");
+                    snd_pcm_prepare(handle);
+                } else if (val < 0) {
+                    fprintf(stderr, "Error writing to PCM device: %s\n", snd_strerror(val));
+                }
+            }
+        }
+    }
     snd_pcm_drain(handle);
     snd_pcm_close(handle);
     free(buffer);
 
+
+
 }
 
-void alsadriver::dropplayer(){
-    snd_pcm_drop(handle);
-    snd_pcm_close(handle);
+void alsadriver::pause_play(int hw_pause) {
+    printf("Can it pause? :", snd_pcm_hw_params_can_pause(params));
+    snd_pcm_pause(handle, hw_pause);
 
 }
 
 
 void alsadriver::checksetup(){
+    int rc, dir;
+    unsigned int val, val2;
 
+    /* Display information about the PCM interface */
 
-   /* Display information about the PCM interface */
+    printf("PCM handle name = '%s'\n", snd_pcm_name(handle));
 
-    printf("PCM handle name = '%s'\n",
-           snd_pcm_name(handle));
+    printf("PCM state = %s\n", snd_pcm_state_name(snd_pcm_state(handle)));
 
-    printf("PCM state = %s\n",
-           snd_pcm_state_name(snd_pcm_state(handle)));
-
-    snd_pcm_hw_params_get_access(params,
-                                (snd_pcm_access_t *) &val);
-    printf("access type = %s\n",
-           snd_pcm_access_name((snd_pcm_access_t) val));
+    snd_pcm_hw_params_get_access(params, (snd_pcm_access_t *) &val);
+    printf("access type = %s\n", snd_pcm_access_name((snd_pcm_access_t) val));
 
     snd_pcm_hw_params_get_format(params, reinterpret_cast<snd_pcm_format_t *>(&val));
     printf("format = '%s' (%s)\n",
@@ -172,34 +189,28 @@ void alsadriver::checksetup(){
     snd_pcm_hw_params_get_rate(params, &val, &dir);
     printf("rate = %d bps\n", val);
 
-    snd_pcm_hw_params_get_period_time(params,
-                                      &val, &dir);
+    snd_pcm_hw_params_get_period_time(params, &val, &dir);
     printf("period time = %d us\n", val);
 
-    snd_pcm_hw_params_get_period_size(params,
-                                      &frames, &dir);
+    snd_pcm_hw_params_get_period_size(params, &frames, &dir);
     printf("period size = %d frames\n", (int) frames);
 
-    snd_pcm_hw_params_get_buffer_time(params,
-                                      &val, &dir);
+    snd_pcm_hw_params_get_buffer_time(params, &val, &dir);
     printf("buffer time = %d us\n", val);
 
-    snd_pcm_hw_params_get_buffer_size(params,
-                                      (snd_pcm_uframes_t *) &val);
+    snd_pcm_hw_params_get_buffer_size(params, (snd_pcm_uframes_t *) &val);
     printf("buffer size = %d frames\n", val);
 
     snd_pcm_hw_params_get_periods(params, &val, &dir);
     printf("periods per buffer = %d frames\n", val);
 
-    snd_pcm_hw_params_get_rate_numden(params,
-                                      &val, &val2);
+    snd_pcm_hw_params_get_rate_numden(params, &val, &val2);
     printf("exact rate = %d/%d bps\n", val, val2);
 
     val = snd_pcm_hw_params_get_sbits(params);
     printf("significant bits = %d\n", val);
 
-    snd_pcm_hw_params_get_tick_time(params,
-                                    &val, &dir);
+    snd_pcm_hw_params_get_tick_time(params, &val, &dir);
     printf("tick time = %d us\n", val);
 
     val = snd_pcm_hw_params_is_batch(params);
@@ -233,145 +244,33 @@ void alsadriver::checksetup(){
     printf("can sync start = %d\n", val);
 }
 
-void alsadriver::displayformat() {
+/*
 
-    printf("ALSA library version: %s\n",
-           SND_LIB_VERSION_STR);
+int alsadriver::SetVolume(int volume)
+{
+    long min, max;
+    snd_mixer_t *handlel;
+    snd_mixer_selem_id_t *sid;
+    const char *card = "hw:0";
+    const char *selem_name = "default";
 
-    printf("\nPCM stream types:\n");
-    for (val = 0; val <= SND_PCM_STREAM_LAST; val++)
-        printf("  %s\n",
-               snd_pcm_stream_name((snd_pcm_stream_t) val));
 
-    printf("\nPCM access types:\n");
-    for (val = 0; val <= SND_PCM_ACCESS_LAST; val++)
-        printf("  %s\n",
-               snd_pcm_access_name((snd_pcm_access_t) val));
+    snd_mixer_open(&handlel, 0);
+    snd_mixer_attach(handlel, card);
+    snd_mixer_selem_register(handlel, NULL, NULL);
+    snd_mixer_load(handlel);
 
-    printf("\nPCM formats:\n");
-    for (val = 0; val <= SND_PCM_FORMAT_LAST; val++)
-        if (snd_pcm_format_name((snd_pcm_format_t) val)
-            != NULL)
-            printf("  %s (%s)\n",
-                   snd_pcm_format_name((snd_pcm_format_t) val),
-                   snd_pcm_format_description(
-                           (snd_pcm_format_t) val));
+    snd_mixer_selem_id_malloc(&sid);
+    snd_mixer_selem_id_set_index(sid, 0);
+    snd_mixer_selem_id_set_name(sid, selem_name);
+    snd_mixer_elem_t* elem = snd_mixer_find_selem(handlel, sid);
 
-    printf("\nPCM subformats:\n");
-    for (val = 0; val <= SND_PCM_SUBFORMAT_LAST;
-         val++)
-        printf("  %s (%s)\n",
-               snd_pcm_subformat_name((
-                                              snd_pcm_subformat_t) val),
-               snd_pcm_subformat_description((
-                                                     snd_pcm_subformat_t) val));
+    snd_mixer_selem_get_playback_volume_range(elem, &min, &max);
+    snd_mixer_selem_set_playback_volume_all(elem, volume * max / 100);
 
-    printf("\nPCM states:\n");
-    for (val = 0; val <= SND_PCM_STATE_LAST; val++)
-        printf("  %s\n",
-               snd_pcm_state_name((snd_pcm_state_t) val));
+    snd_mixer_close(handlel);
+
+    return 1;
 
 }
-
-void alsadriver::playmusic() {
-    long loops;
-    int rc;
-    int size;
-    snd_pcm_t *handle;
-    snd_pcm_hw_params_t *params;
-    unsigned int val;
-    int dir;
-    snd_pcm_uframes_t frames;
-    char *buffer;
-
-    /* Open PCM device for playback. */
-    rc = snd_pcm_open(&handle, "default",
-                      SND_PCM_STREAM_PLAYBACK, 0);
-    if (rc < 0) {
-        fprintf(stderr,
-                "unable to open pcm device: %s\n",
-                snd_strerror(rc));
-        exit(1);
-    }
-
-    /* Allocate a hardware parameters object. */
-    snd_pcm_hw_params_alloca(&params);
-
-    /* Fill it in with default values. */
-    snd_pcm_hw_params_any(handle, params);
-
-    /* Set the desired hardware parameters. */
-
-    /* Interleaved mode */
-    snd_pcm_hw_params_set_access(handle, params,
-                                 SND_PCM_ACCESS_RW_INTERLEAVED);
-
-    /* Signed 16-bit little-endian format */
-    snd_pcm_hw_params_set_format(handle, params,
-                                 SND_PCM_FORMAT_S16_LE);
-
-
-    /* Two channels (stereo) */
-    snd_pcm_hw_params_set_channels(handle, params, 2);
-
-    /* 44100 bits/second sampling rate (CD quality) */
-    val = 44100;
-    snd_pcm_hw_params_set_rate_near(handle, params,
-                                    &val, &dir);
-
-    /* Set period size to 32 frames. */
-    frames = 32;
-    snd_pcm_hw_params_set_period_size_near(handle,
-                                           params, &frames, &dir);
-
-    /* Write the parameters to the driver */
-    rc = snd_pcm_hw_params(handle, params);
-    if (rc < 0) {
-        fprintf(stderr,
-                "unable to set hw parameters: %s\n",
-                snd_strerror(rc));
-        exit(1);
-    }
-
-    /* Use a buffer large enough to hold one period */
-    snd_pcm_hw_params_get_period_size(params, &frames,
-                                      &dir);
-    size = frames * 4; /* 2 bytes/sample, 2 channels */
-    buffer = (char *) malloc(size);
-
-    /* We want to loop for 5 seconds */
-    snd_pcm_hw_params_get_period_time(params,
-                                      &val, &dir);
-    /* 5 seconds in microseconds divided by
-     * period time */
-    loops = 5000000 / val;
-
-    while (loops > 0) {
-        loops--;
-        rc = read(0, buffer, size);
-        if (rc == 0) {
-            fprintf(stderr, "end of file on input\n");
-            break;
-        } else if (rc != size) {
-            fprintf(stderr,
-                    "short read: read %d bytes\n", rc);
-        }
-        rc = snd_pcm_writei(handle, buffer, frames);
-        if (rc == -EPIPE) {
-            /* EPIPE means underrun */
-            fprintf(stderr, "underrun occurred\n");
-            snd_pcm_prepare(handle);
-        } else if (rc < 0) {
-            fprintf(stderr,
-                    "error from writei: %s\n",
-                    snd_strerror(rc));
-        } else if (rc != (int) frames) {
-            fprintf(stderr,
-                    "short write, write %d frames\n", rc);
-        }
-    }
-
-    snd_pcm_drain(handle);
-    snd_pcm_close(handle);
-    free(buffer);
-}
+*/

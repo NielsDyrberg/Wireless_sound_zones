@@ -6,24 +6,27 @@
 #include "alsa/asoundlib.h"
 #include "alsadriver.h"
 
+
 class alsadriver {
 
     public:
 
-        void displayformat();
         /*
-         * Stops playing music and drop pending frames
+         * Display the hardware setup if the alsa driver
          */
-        void dropplayer();
-        void playmusic();
+         void checksetup();
         /*
-        * Display the hardware setup if the alsa driver
-        */
-        void checksetup();
+         * Starts playing music from FIFO buffer
+         */
+        void startstreaming(unsigned sampling_rate = 4000, int channels = 1, const char* bitformat = "SND_PCM_FORMAT_S16_LE");
         /*
-        * Starts playing music
-        */
-        int startstreaming(unsigned sampling_rate = 2, int channels = 44100, const char* bitformat = "SND_PCM_FORMAT_S16_LE");
+         *  Used to define whether to read from buffer or not
+         */
+        volatile bool run_on = false;
+        //std::atomic<bool> run_on = ATOMIC_VAR_INIT(true);
+
+        void pause_play(int hw_pause);
+
 
     private:
         // Variables used for running the alsa driver
@@ -31,8 +34,10 @@ class alsadriver {
         snd_pcm_hw_params_t *params;
         snd_pcm_t *handle;
         snd_pcm_uframes_t frames;
-        int rc, dir;
-        unsigned int val, val2;
+
+        /*
+         * Converts bitformat to corresponding enum
+         */
         void CharToFormat(const char* bitformat);
 
 
