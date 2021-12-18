@@ -151,129 +151,8 @@ class DataTransport {}
 ![](diagrams/class_diagram.svg)
 
 
-## Sequence diagram over general use
+## Use case diagram
 
-This is an overview of how the product should be used.
-The syncronization is not taken into account.
-
-<!--
-```
-@startuml how_to_use
-
-group Turn devices on
-    user -> server: Power on
-    user -> client1: Power on
-    user -> client2: Power on
-    user -> clientN: Power on
-end
-
-group Enroll client1
-    client1 -> server: Enroll me, i am client1
-    client1 <-- server: Thats a'okay
-end
-
-group Enroll client2
-    client2 -> server: Enroll me, i am client2
-    client2 <-- server: Thats a'okay
-end
-
-group Enroll clientN
-    clientN -> server: Enroll me, i am clientN
-    clientN <-- server: Thats a'okay
-end
-
-user -> server: Play this song
-
-group Setup music format
-    server -> client1: This is the sound format
-    server -> client2: This is the sound format
-    server -> clientN: This is the sound format
-end
-
-group Stream music
-    server -> client1: Chunk[1,1] of song
-    server -> client2: Chunk[2,1] of song
-    server -> clientN: Chunk[N,1] of song
-
-    server -> client1: Chunk[1,2] of song
-    server -> client2: Chunk[2,2] of song
-    server -> clientN: Chunk[N,2] of song
-
-    server -> client1: Chunk[1,3] of song
-    server -> client2: Chunk[2,3] of song
-    server -> clientN: Chunk[N,3] of song
-
-    server -> client1: Chunk[1,4] of song
-    server -> client2: Chunk[2,4] of song
-    server -> clientN: Chunk[N,4] of song
-end
-
-@enduml
-```
--->
-
-![](diagrams/how_to_use.svg)rver {
-        class SZS_server{}
-    }
-}
-
-together {
-    package SZP {
-        SZP_master --o sound_zone_protocol
-        SZP_slave --o sound_zone_protocol
-
-        package sound_zone_protocol {
-            class sound_zone_protocol {}
-        }
-    }
-
-    package szs_time_sync {
-        class Sync_Slave {}
-        class Sync_Master {}
-        class TimeKeeper {}
-    }
-
-    package DataTransport{
-        UDP_server --o DataTransport
-        UDP_client --o DataTransport
-
-    }
-
-    package Socket{
-        DataTransport -right-* socket
-    }
-}
-
-SZS_client --* SZP_slave
-SZS_server --* SZP_master
-SZS_client --* Sync_Slave
-SZS_server --* Sync_Master
-SZS_client -right-* alsadriver
-SZP_master --* UDP_client
-SZP_slave --* UDP_server
-Sync_Slave --* TimeKeeper
-Sync_Master --* TimeKeeper
-Sync_Slave --* UDP_server
-Sync_Master --* UDP_client
-
-
-class UDP_server {}
-
-class UDP_client {}
-
-class DataTransport {}
-
-class socket {}
-
-class SZP_master{}
-
-class SZP_slave{}
-
-@enduml
-```
--->
-
-![](diagrams/class_diagram.svg)
 
 
 ## Sequence diagram over general use
@@ -284,53 +163,58 @@ The syncronization is not taken into account.
 <!--
 ```
 @startuml how_to_use
+!pragma teoz true
+
+actor user
+participant server
+participant client1
+participant clientN
+box
+boundary speakers
+end box
 
 group Turn devices on
-    user -> server: Power on
     user -> client1: Power on
-    user -> client2: Power on
+    ...
     user -> clientN: Power on
+    ...
+    user -> server: Power on
 end
 
-group Enroll client1
-    client1 -> server: Enroll me, i am client1
-    client1 <-- server: Thats a'okay
-end
+group Sync clients
+    group Sync client
+        server -> client1: Sync request
+        server <- client1: Sync ack
+        server -> client1: Timestamps
+        server <- client1: Sync ACP/DEC
+    end 
+    ...
+    group Sync client
+        server -> clientN: Sync request
+        server <- clientN: Sync ack
+        server -> clientN: Timestamps
+        server <- clientN: Sync ACP/DEC
+    end 
 
-group Enroll client2
-    client2 -> server: Enroll me, i am client2
-    client2 <-- server: Thats a'okay
-end
-
-group Enroll clientN
-    clientN -> server: Enroll me, i am clientN
-    clientN <-- server: Thats a'okay
-end
-
-user -> server: Play this song
-
-group Setup music format
-    server -> client1: This is the sound format
-    server -> client2: This is the sound format
-    server -> clientN: This is the sound format
 end
 
 group Stream music
-    server -> client1: Chunk[1,1] of song
-    server -> client2: Chunk[2,1] of song
-    server -> clientN: Chunk[N,1] of song
+    group Send song
+        server -> client1: Chunk[1] of song
+        ...
+        server -> client1: Chunk[end] of song
+    end
+    ...
+    group Send song
+        server -> clientN: Chunk[1] of song
+        ...
+        server -> clientN: Chunk[end] of song
+    end
+end
 
-    server -> client1: Chunk[1,2] of song
-    server -> client2: Chunk[2,2] of song
-    server -> clientN: Chunk[N,2] of song
-
-    server -> client1: Chunk[1,3] of song
-    server -> client2: Chunk[2,3] of song
-    server -> clientN: Chunk[N,3] of song
-
-    server -> client1: Chunk[1,4] of song
-    server -> client2: Chunk[2,4] of song
-    server -> clientN: Chunk[N,4] of song
+group Play song
+    client1 -> speakers: Play song
+    & clientN -> speakers: Play song
 end
 
 @enduml
@@ -338,3 +222,5 @@ end
 -->
 
 ![](diagrams/how_to_use.svg)
+
+
