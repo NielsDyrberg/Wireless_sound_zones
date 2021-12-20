@@ -165,7 +165,9 @@ The syncronization is not taken into account.
 @startuml how_to_use
 !pragma teoz true
 
+box 
 actor user
+end box
 participant server
 participant client1
 participant clientN
@@ -182,34 +184,16 @@ group Turn devices on
 end
 
 group Sync clients
-    group Sync client
-        server -> client1: Sync request
-        server <- client1: Sync ack
-        server -> client1: Timestamps
-        server <- client1: Sync ACP/DEC
-    end 
+    server <-> client1: Sync
     ...
-    group Sync client
-        server -> clientN: Sync request
-        server <- clientN: Sync ack
-        server -> clientN: Timestamps
-        server <- clientN: Sync ACP/DEC
-    end 
+    server <-> clientN: Sync
 
 end
 
 group Stream music
-    group Send song
-        server -> client1: Chunk[1] of song
-        ...
-        server -> client1: Chunk[end] of song
-    end
+    server -> client1: Send song
     ...
-    group Send song
-        server -> clientN: Chunk[1] of song
-        ...
-        server -> clientN: Chunk[end] of song
-    end
+    server -> clientN: Send song
 end
 
 group Play song
