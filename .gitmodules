@@ -1,0 +1,15 @@
+[submodule "Client/szs_client"]
+	path = Client/szs_client
+	url = git@github.com:NielsDyrberg/szs_client.git
+[submodule "Server/szs_server"]
+	path = Server/szs_server
+	url = git@github.com:NielsDyrberg/szs_server.git
+[submodule "Sub_modules/szs_soundzone_protocol"]
+	path = Sub_modules/szs_soundzone_protocol
+	url = git@github.com:NielsDyrberg/szs_soundzone_protocol.git
+[submodule "Sub_modules/szs_datatransport"]
+	path = Sub_modules/szs_datatransport
+	url = git@github.com:NielsDyrberg/szs_datatransport.git
+[submodule "Sub_modules/szs_time_sync"]
+	path = Sub_modules/szs_time_sync
+	url = git@github.com:NielsDyrberg/szs_time_sync.git

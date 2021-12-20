@@ -4,6 +4,3 @@
 **.pyc
 *.DS_Store
 **/cmake-build*/*
-**/deps/*
-!/c_shared_modules/deps/*
-!/c_shared_modules/tests/*
