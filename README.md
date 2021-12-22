@@ -58,11 +58,6 @@ Its build for the purpose of making it possible to wirelessly stream the audio r
 jitter as possible, and play a different audio track dependent on the filter.
 
 
-## How does it work
-
-Small little harry potters are inside each raspberry pi, and they swish their wands to make the music go **BOOM!**
-
-
 ## Installation
 
 To install either the server or client, simply clone the repository to the raspberry pi, and run either server_setup.sh or client_setup.sh
